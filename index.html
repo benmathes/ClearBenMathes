@@ -1,0 +1,2693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLEAR Offer Letter - Startup Equity Navigator</title>
+
+  <!-- Dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.6.0/backbone-min.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      color: #333;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    /* Header */
+    .page-header {
+      text-align: center;
+      padding: 15px 10px;
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 10px;
+    }
+
+    .page-header h1 {
+      font-size: 1.8rem;
+      font-weight: 300;
+      margin: 0 0 5px;
+      color: #333;
+    }
+
+    .page-header .subtitle {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    /* Sections */
+    .section {
+      background: #fff;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 3px;
+    }
+
+    .section-subtitle {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    /* Terms */
+    .term {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .term:last-child {
+      border-bottom: none;
+    }
+
+    .term-left {
+      flex: 0 0 240px;
+      padding-right: 15px;
+    }
+
+    .term-right {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .term-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #666;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .term-value {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .term-description {
+      color: #555;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* Inputs */
+    input[type="text"],
+    input[type="number"],
+    select {
+      font-size: 0.95rem;
+      padding: 5px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #366ad3;
+    }
+
+    input.narrow {
+      width: 85px;
+      text-align: right;
+    }
+
+    input.tiny {
+      width: 50px;
+      text-align: right;
+    }
+
+    input.standard {
+      width: 100px;
+      text-align: right;
+    }
+
+    input.wide {
+      width: 150px;
+      text-align: right;
+    }
+
+    select {
+      min-width: 90px;
+    }
+
+    .unit {
+      color: #888;
+      font-weight: 300;
+      font-size: 0.9rem;
+    }
+
+    /* Checkboxes and Radios */
+    input[type="checkbox"],
+    input[type="radio"] {
+      margin-right: 8px;
+      transform: scale(1.2);
+    }
+
+    label {
+      cursor: pointer;
+    }
+
+    /* Charts */
+    .chart-container {
+      margin-top: 10px;
+      min-height: 150px;
+    }
+
+    .chart-container:empty {
+      display: none;
+    }
+
+    /* Action Bar */
+    .action-bar {
+      background: #f0f0f0;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .share-url-container {
+      margin-bottom: 20px;
+    }
+
+    .share-url {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px;
+      font-size: 0.85rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary {
+      background: #366ad3;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #2a5bb8;
+    }
+
+    .btn-secondary {
+      background: #888;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background: #666;
+    }
+
+    .action-note {
+      color: #888;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+
+    /* Utility Classes */
+    .u-hidden {
+      display: none !important;
+    }
+
+    .u-bold {
+      font-weight: 600;
+    }
+
+    .u-muted {
+      color: #888;
+    }
+
+    .helpful {
+      color: #007047;
+    }
+
+    .harmful {
+      color: #C0423F;
+    }
+
+    .gutter-icon {
+      float: left;
+      margin-left: -25px;
+      font-size: 15px;
+      color: #888;
+    }
+
+    .warning {
+      color: #C0423F;
+    }
+
+    /* Presets */
+    .presets {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .preset-card {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px;
+      background: #f8f8f8;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .preset-card:hover {
+      border-color: #366ad3;
+    }
+
+    .preset-card.active {
+      background: #fff;
+      border-color: #366ad3;
+    }
+
+    .preset-card h4 {
+      margin: 0 0 5px;
+      font-size: 1rem;
+    }
+
+    .preset-card p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    /* Benefits */
+    .benefits-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+    }
+
+    /* How Much Table */
+    .exits-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .exits-table th,
+    .exits-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .exits-table th {
+      font-weight: 600;
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    .exits-table tr:hover {
+      background: #f9f9f9;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .term-left {
+        flex: 0 0 100%;
+        padding-right: 0;
+        margin-bottom: 15px;
+      }
+
+      .term-right {
+        min-width: 100%;
+      }
+
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+
+    /* Disabled state */
+    input:disabled,
+    select:disabled {
+      background: #f5f5f5;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    .js-termWarning .term-title {
+      color: #C0423F;
+    }
+
+    /* Interactive Explorer */
+    .explorer-container {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .explorer-controls {
+      flex: 0 0 280px;
+    }
+
+    .explorer-viz {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .explorer-group {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+
+    .explorer-group h3 {
+      margin: 0 0 10px;
+      font-size: 0.85rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .slider-row {
+      margin-bottom: 12px;
+    }
+
+    .slider-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .slider-row label {
+      display: block;
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .explorer-slider {
+      width: calc(100% - 70px);
+      height: 6px;
+      -webkit-appearance: none;
+      background: #ddd;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .explorer-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #366ad3;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .explorer-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: #366ad3;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+
+    .slider-value {
+      display: inline-block;
+      width: 65px;
+      text-align: right;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+      vertical-align: middle;
+    }
+
+    /* Explorer Numbers */
+    .explorer-numbers {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .exp-number-card {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .exp-number-card.exp-highlight {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border: 2px solid #4caf50;
+    }
+
+    .exp-number-card.exp-negative {
+      background: linear-gradient(135deg, #ffebee, #ffcdd2);
+      border: 2px solid #f44336;
+    }
+
+    .exp-number-label {
+      font-size: 0.7rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .exp-number-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .exp-number-sub {
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    /* Explorer Chart */
+    .explorer-chart-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    .explorer-chart-section h4 {
+      margin: 0 0 10px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .explorer-chart {
+      height: 180px;
+      position: relative;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 15px;
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .legend-line::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: #666;
+      vertical-align: middle;
+      margin-right: 4px;
+      border-top: 2px dashed #666;
+    }
+
+    /* Breakdown Bar */
+    .explorer-breakdown {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    .explorer-breakdown h4 {
+      margin: 0 0 10px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .breakdown-bar {
+      display: flex;
+      height: 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #eee;
+    }
+
+    .breakdown-segment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      min-width: 0;
+      transition: width 0.3s ease;
+      overflow: hidden;
+    }
+
+    .breakdown-segment span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 4px;
+    }
+
+    #exp-seg-pref {
+      background: #ff7043;
+    }
+
+    #exp-seg-others {
+      background: #78909c;
+    }
+
+    #exp-seg-you {
+      background: #4caf50;
+    }
+
+    .breakdown-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    /* Arrow label for "You" segment */
+    .breakdown-container {
+      position: relative;
+      padding-top: 30px;
+    }
+
+    .you-arrow-label {
+      position: absolute;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4caf50;
+      transition: left 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .you-arrow-label .arrow {
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid #4caf50;
+      margin-top: 2px;
+    }
+
+    .you-arrow-label.hidden {
+      display: none;
+    }
+
+    /* Scenarios */
+    .explorer-scenarios {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+
+    .explorer-scenarios h4 {
+      margin: 0 0 10px;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .scenario-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .scenario-btn {
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scenario-btn:hover {
+      background: #366ad3;
+      color: #fff;
+      border-color: #366ad3;
+    }
+
+    .scenario-btn.active {
+      background: #366ad3;
+      color: #fff;
+      border-color: #366ad3;
+    }
+
+    /* Insights */
+    .explorer-insights {
+      background: #fff3e0;
+      border-radius: 8px;
+      padding: 12px;
+      border-left: 4px solid #ff9800;
+    }
+
+    .insight {
+      font-size: 0.85rem;
+      color: #555;
+      margin-bottom: 6px;
+      padding-left: 5px;
+    }
+
+    .insight:last-child {
+      margin-bottom: 0;
+    }
+
+    .insight:empty {
+      display: none;
+    }
+
+    .insight strong {
+      color: #333;
+    }
+
+    .insight .good {
+      color: #2e7d32;
+      font-weight: 600;
+    }
+
+    .insight .bad {
+      color: #c62828;
+      font-weight: 600;
+    }
+
+    @media (max-width: 700px) {
+      .explorer-controls {
+        flex: 0 0 100%;
+      }
+
+      .explorer-numbers {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <h1>CLEAR Offer Letter</h1>
+    <div class="subtitle">
+      Confidential &middot; No data is saved &middot; Everything is encoded in the URL
+    </div>
+  </header>
+
+  <div class="container">
+    <form class="js-clearForm" onsubmit="return false;">
+
+      <!-- FUNDAMENTALS SECTION -->
+      <section class="section">
+        <h2 class="section-title">Fundamentals</h2>
+        <p class="section-subtitle">Salary and equity basics.</p>
+
+        <!-- Salary -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="salary"></a>
+            <div class="term-title js-termTitle">SALARY</div>
+            <div class="term-value js-termValue">
+              <span class="unit">$</span>
+              <input type="text" class="narrow js-salary js-termInput" data-model-attribute="salary" placeholder="100">
+              <span class="unit">,000</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              Gross annual salary. Paid via standard company payment practices.
+            </div>
+            <div class="u-hidden js-salaryChartObserver"></div>
+            <div class="chart-container js-salaryChart"></div>
+          </div>
+        </div>
+
+        <!-- Equity Percent -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="equity"></a>
+            <div class="term-title js-termTitle">EQUITY</div>
+            <div class="term-value js-termValue">
+              <input type="text" class="narrow js-equityPercent js-equityPercentObserver js-termInput" data-model-attribute="equity_percent" placeholder="0.1">
+              <span class="unit">%</span>
+              <span class="u-muted">(approximate, current)</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              This is your number of options divided by total shares. Later funding will probably increase outstanding shares.
+              The dollar value of your options may go up even if your percentage declines. 0.1% of $100M is more than 0.9% of $10M.
+            </div>
+            <div class="u-hidden js-equityChartObserver"></div>
+            <div class="chart-container js-equityChart"></div>
+          </div>
+        </div>
+
+        <!-- CLEAR Preset Selection -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="which_clear"></a>
+            <div class="term-title js-termTitle">CLEAR EQUITY MECHANICS</div>
+            <div class="term-value js-termValue">
+              <div>
+                <label>
+                  <input type="radio" name="preset" value="clear1" class="js-preset js-termInput" data-model-attribute="preset" checked>
+                  10-year exercise window
+                </label>
+              </div>
+              <div style="margin-top: 8px;">
+                <label>
+                  <input type="radio" name="preset" value="clear2" class="js-preset js-termInput" data-model-attribute="preset">
+                  90-day window with net-exercise
+                </label>
+              </div>
+              <div style="margin-top: 8px;">
+                <label>
+                  <input type="radio" name="preset" value="unclear" class="js-preset js-termInput" data-model-attribute="preset">
+                  Custom (edit all fields)
+                </label>
+              </div>
+              <div class="u-muted js-presetNote" style="margin-top: 5px; font-size: 0.85rem;">
+                CLEAR presets include early-exercise with no back/front-loading.
+              </div>
+              <div class="u-hidden js-presetObserver"></div>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              <span class="js-presetText js-clear1 u-hidden">
+                Longest-allowable window to exercise your options. Employees can wait until a company exits to exercise.
+                Plus <a href="#early_exercise">early exercise</a> and no <a href="#loading">front/back-loading</a>.
+              </span>
+              <span class="js-presetText js-clear2 u-hidden">
+                Short window to exercise, but with a mechanism (net-exercise) to get some of your shares without paying cash.
+                Plus <a href="#early_exercise">early exercise</a> and no <a href="#loading">front/back-loading</a>.
+              </span>
+              <span class="js-presetText js-unclear u-hidden">
+                Custom terms. You can edit all fields including exercise window, early exercise, and loading.
+                Make sure you understand the implications of each choice.
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- OWNERSHIP SECTION -->
+      <section class="section">
+        <h2 class="section-title">Your Ownership</h2>
+        <p class="section-subtitle">How much of the company you might someday own.</p>
+
+        <!-- Number of Options -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="number_of_options"></a>
+            <div class="term-title js-termTitle">NUMBER OF OPTIONS</div>
+            <div class="term-value js-termValue">
+              <input type="text" class="narrow js-numberOfOptions js-numberOfOptionsObserver js-termInput" data-model-attribute="number_of_options" placeholder="10000">
+              <span class="unit">options</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              You will have the option to buy <span class="js-numberOfOptionsText u-bold">this many</span> shares of stock.
+              You cannot buy them yet. You earn the right to buy them over time (see <a href="#vesting">vesting</a>).
+              You do not own any stock unless you buy them.
+            </div>
+          </div>
+        </div>
+
+        <!-- Outstanding Shares -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="outstanding_shares"></a>
+            <div class="term-title js-termTitle">OUTSTANDING SHARES</div>
+            <div class="term-value js-termValue">
+              <input type="text" class="standard js-outstandingShares js-outstandingSharesObserver js-termInput" data-model-attribute="outstanding_shares" placeholder="10000000">
+              <span class="unit">shares</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              <span class="js-dilutionExplanation js-noNumbers u-hidden">
+                Enter your shares and outstanding shares to see dilution.
+              </span>
+              <span class="js-dilutionExplanation js-withNumbers u-hidden">
+                If the company raises a new round with investors taking 20%, there would be
+                <span class="js-newInvestorShares u-bold"></span> new shares for
+                <span class="js-newSharesOutstanding u-bold"></span> total shares.
+                Your <span class="js-equityPercentText u-bold"></span> would become
+                <span class="js-equityPercentPostDilution u-bold"></span>.
+              </span>
+              Each funding round typically creates new shares, diluting existing ownership.
+            </div>
+          </div>
+        </div>
+
+        <!-- Latest Valuation Per Share -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="latest_valuation"></a>
+            <div class="term-title js-termTitle">LATEST VALUATION PER SHARE</div>
+            <div class="term-value js-termValue">
+              <span class="unit">$</span>
+              <input type="text" class="narrow js-latestValuationPerShare js-termInput" data-model-attribute="latest_valuation_per_share" placeholder="1.50">
+              <span class="unit">per preferred share</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              The price paid by the last investors. Your options let you buy at the <a href="#strike_price">strike price</a>,
+              hopefully lower than this.
+            </div>
+          </div>
+        </div>
+
+        <!-- Company Valuation (calculated) -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="company_valuation"></a>
+            <div class="term-title js-termTitle">COMPANY VALUATION</div>
+            <div class="term-value js-termValue">
+              <span class="js-companyValuationText u-bold" style="font-size: 1.3rem;">-</span>
+              <span class="u-muted">(approximate)</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              Calculated from shares outstanding times latest valuation per share.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VESTING SECTION -->
+      <section class="section">
+        <h2 class="section-title">How You Get Your Ownership</h2>
+        <p class="section-subtitle">How long and how fast it takes for you to earn your ownership.</p>
+
+        <!-- Vesting -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="vesting"></a>
+            <div class="term-title js-termTitle">VESTING</div>
+            <div class="term-value js-termValue">
+              <input type="text" class="tiny js-vestingYears js-termInput" data-model-attribute="vesting_years" value="4">
+              <span class="unit">years,</span>
+              <input type="text" class="tiny js-vestingCliffYears js-termInput" data-model-attribute="vesting_cliff_years" value="1">
+              <span class="unit">year cliff</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              You do not get any options when you start. You earn ("vest") them over time.
+              <span class="js-vestingExplanation js-noNumbers u-hidden">
+                You don't get anything until after your cliff.
+              </span>
+              <span class="js-vestingExplanation js-withNumbers u-hidden">
+                You vest your options over <span class="js-vestingYearsText u-bold"></span>.
+                You don't get anything until after <span class="js-vestingCliffYearsText u-bold"></span>.
+              </span>
+              If you leave even one day before your cliff, you get none of your options.
+            </div>
+            <div class="u-hidden js-vestingChartObserver"></div>
+            <div class="chart-container js-vestingChart"></div>
+          </div>
+        </div>
+
+        <!-- Early Exercise -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="early_exercise"></a>
+            <div class="term-title js-termTitle">EARLY EXERCISE</div>
+            <div class="term-value js-termValue">
+              <select class="js-earlyExercise js-termInput" data-model-attribute="early_exercise">
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+              </select>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              <span class="js-earlyExerciseExplanation js-yes u-hidden">
+                <span class="helpful">You can exercise your options before they vest.</span>
+                This lets you start the clock on long-term capital gains tax treatment earlier.
+                If you leave, the company can buy back unvested shares at your original price.
+              </span>
+              <span class="js-earlyExerciseExplanation js-no u-hidden">
+                <span class="harmful">You cannot exercise your options before they vest.</span>
+                You may miss out on favorable tax treatment if the stock price increases significantly.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="loading"></a>
+            <div class="term-title js-termTitle">LOADING</div>
+            <div class="term-value js-termValue">
+              <select class="js-loading js-termInput" data-model-attribute="loading">
+                <option value="none">none (even)</option>
+                <option value="front-loaded">front-loaded</option>
+                <option value="back-loaded">back-loaded</option>
+              </select>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              <span class="js-loadingExplanation js-noLoading u-hidden">
+                <span class="helpful">Your options vest evenly over time.</span>
+                This is the standard and fairest approach.
+              </span>
+              <span class="js-loadingExplanation js-frontLoading u-hidden">
+                <span class="helpful">More options vest early.</span>
+                This benefits you if you leave early.
+              </span>
+              <span class="js-loadingExplanation js-backLoading u-hidden">
+                <span class="harmful">More options vest later.</span>
+                Back-loading primarily benefits the company, not you. Make sure you're getting more total options.
+              </span>
+            </div>
+            <div class="u-hidden js-loadingChartObserver"></div>
+            <div class="chart-container js-loadingChart u-hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXERCISING SECTION -->
+      <section class="section">
+        <h2 class="section-title">Taking Ownership</h2>
+        <p class="section-subtitle">The mechanics of turning your options into actual ownership.</p>
+
+        <!-- Strike Price -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="strike_price"></a>
+            <div class="term-title js-termTitle">STRIKE PRICE</div>
+            <div class="term-value js-termValue">
+              <span class="unit">$</span>
+              <input type="text" class="narrow js-strikePrice js-termInput" data-model-attribute="strike_price" placeholder="0.10">
+              <span class="unit">per share</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              The price you pay to buy each share when you exercise.
+              <span class="js-strikePriceExplanation js-numbers u-hidden">
+                At <span class="js-strikePriceText u-bold"></span> per share, it would cost
+                <span class="js-costToExerciseText u-bold"></span> to exercise all your options.
+              </span>
+              See <a href="#preference_floor">preference floor</a> for when your shares become valuable.
+            </div>
+          </div>
+        </div>
+
+        <!-- Exercise Window -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="exercise_window"></a>
+            <div class="term-title js-termTitle">EXERCISE WINDOW</div>
+            <div class="term-value js-termValue">
+              <input type="text" class="tiny js-exerciseWindowYears js-termInput" data-model-attribute="exercise_window_years" placeholder="10">
+              <span class="unit">years</span>
+              <input type="text" class="tiny js-exerciseWindowDays js-termInput" data-model-attribute="exercise_window_days" placeholder="0">
+              <span class="unit">days</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              After you leave the company, you have <span class="js-exerciseWindowText u-bold">this long</span> to buy your vested options.
+              If you don't exercise in time, you lose them. Longer is better for you.
+            </div>
+          </div>
+        </div>
+
+        <!-- Cost to Exercise -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="cost_to_exercise"></a>
+            <div class="term-title js-termTitle">COST TO EXERCISE</div>
+            <div class="term-value js-termValue">
+              <span class="js-costToExerciseText u-bold" style="font-size: 1.3rem;">-</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              <span class="js-costToExerciseEquation">
+                <span class="js-strikePriceText"></span> strike &times;
+                <span class="js-numberOfOptionsText"></span> options
+              </span>
+              This is the cash you need to buy your shares. Consider this when evaluating your offer.
+            </div>
+          </div>
+        </div>
+
+        <!-- Net Exercise -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="net_exercise"></a>
+            <div class="term-title js-termTitle">NET EXERCISE</div>
+            <div class="term-value js-termValue">
+              <select class="js-netExercise js-termInput" data-model-attribute="net_exercise">
+                <option value="">select...</option>
+                <option value="yes">yes</option>
+                <option value="no">no</option>
+              </select>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              <span class="js-netExerciseExplanation js-yes u-hidden">
+                <span class="helpful">You can sell some shares back to cover the exercise cost.</span>
+                If you can't afford to exercise, you can still get some shares without paying cash.
+              </span>
+              <span class="js-netExerciseExplanation js-no u-hidden">
+                <span class="harmful">You must pay cash to exercise.</span>
+                If you can't afford to exercise before your window closes, you lose your options.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preference Floor -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <a name="preference_floor"></a>
+            <div class="term-title js-termTitle">PREFERENCE FLOOR</div>
+            <div class="term-value js-termValue">
+              <span class="unit">$</span>
+              <input type="text" class="standard js-preferenceFloor js-termInput" data-model-attribute="preference_floor" placeholder="10000000">
+              <span class="u-muted">(estimate)</span>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description">
+              <span class="js-preferenceFloorExplanation js-noNumbers u-hidden">
+                The exit value at which common shareholders (you) start getting paid.
+                Investors with liquidation preferences get paid first.
+              </span>
+              <span class="js-preferenceFloorExplanation js-aboveLatestValuation u-hidden">
+                The company needs to exit above <span class="js-preferenceFloorText u-bold"></span> for your options to have value.
+              </span>
+              <span class="js-preferenceFloorExplanation js-aboveExerciseCost u-hidden">
+                Your options become "in the money" at <span class="js-preferenceFloorIncreaseOptionsInMoney u-bold"></span>.
+              </span>
+            </div>
+            <div class="u-hidden js-optionsInMoneyChartObserver"></div>
+            <div class="chart-container js-optionsInMoneyChart"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW MUCH SECTION -->
+      <section class="section">
+        <a name="how_much_is_it_worth"></a>
+        <h2 class="section-title">In Rare Exits, How Much Could Your Equity Be Worth?</h2>
+        <p class="section-subtitle">
+          The biggest factor is how much bigger the company gets. Huge outcomes only happen a few times each decade.
+        </p>
+
+        <table class="exits-table">
+          <thead>
+            <tr>
+              <th>You could buy...</th>
+              <th>With options worth...</th>
+              <th>If company exits for...</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>nothing</td>
+              <td>nothing</td>
+              <td>under <span class="js-preferenceFloorIncreaseOptionsInMoney">$?</span></td>
+            </tr>
+            <div class="u-hidden js-comparableExitObserver"></div>
+            <tr class="js-comparableExit" data-approx-val="10000000">
+              <td class="js-canBuy"></td>
+              <td class="js-withOptionsWorth"></td>
+              <td class="js-approxVal">$10M</td>
+            </tr>
+            <tr class="js-comparableExit" data-approx-val="50000000">
+              <td class="js-canBuy"></td>
+              <td class="js-withOptionsWorth"></td>
+              <td class="js-approxVal">$50M</td>
+            </tr>
+            <tr class="js-comparableExit" data-approx-val="100000000">
+              <td class="js-canBuy"></td>
+              <td class="js-withOptionsWorth"></td>
+              <td class="js-approxVal">$100M</td>
+            </tr>
+            <tr class="js-comparableExit" data-approx-val="500000000">
+              <td class="js-canBuy"></td>
+              <td class="js-withOptionsWorth"></td>
+              <td class="js-approxVal">$500M</td>
+            </tr>
+            <tr class="js-comparableExit" data-approx-val="1000000000">
+              <td class="js-canBuy"></td>
+              <td class="js-withOptionsWorth"></td>
+              <td class="js-approxVal">$1B</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top: 20px; color: #666; font-size: 0.9rem;">
+          <p>
+            Based on current equity
+            <input type="text" class="tiny js-equityPercentHowMuch" data-model-attribute="equity_percent" style="width: 50px;">%,
+            series
+            <select class="js-latestSeriesHowMuch" data-model-attribute="latest_series" style="width: 80px;">
+              <option value="seed">seed</option>
+              <option value="A" selected>A</option>
+              <option value="B">B</option>
+              <option value="C+">C+</option>
+            </select>,
+            exercise cost (<a href="#cost_to_exercise">strike price</a> $
+            <input type="text" class="tiny js-strikePriceHowMuch" data-model-attribute="strike_price" style="width: 60px;">
+            &times; # of options
+            <input type="text" class="tiny js-numberOfOptionsHowMuch" data-model-attribute="number_of_options" style="width: 80px;">),
+            and <a href="#preference_floor">preference floor</a> $
+            <input type="text" class="tiny js-preferenceFloorHowMuch" data-model-attribute="preference_floor" style="width: 100px;">.
+          </p>
+          <p class="js-ballparkPreferenceFloor">
+            Without the preference floor, we estimate using: latest valuation $
+            <input type="text" class="tiny js-latestValuationHowMuch" data-model-attribute="latest_valuation" style="width: 100px;">
+            and liquidation preference
+            <input type="text" class="tiny js-liquidationPreferenceHowMuch" data-model-attribute="liquidation_preference" style="width: 40px;" value="1">x non-participating.
+          </p>
+        </div>
+      </section>
+
+      <!-- INTERACTIVE EXPLORER SECTION -->
+      <section class="section" id="explorer">
+        <h2 class="section-title">Interactive Explorer</h2>
+        <p class="section-subtitle">
+          Drag the sliders to see how each term affects your potential payout.
+          Watch how the numbers change in real-time.
+        </p>
+
+        <div class="explorer-container">
+          <!-- Left: Controls -->
+          <div class="explorer-controls">
+            <div class="explorer-group">
+              <h3>Your Equity</h3>
+
+              <div class="slider-row">
+                <label>Equity Ownership</label>
+                <input type="range" class="explorer-slider" id="exp-equity" min="0.01" max="5" step="0.01" value="0.5">
+                <span class="slider-value" id="exp-equity-val">0.5%</span>
+              </div>
+
+              <div class="slider-row">
+                <label>Strike Price</label>
+                <input type="range" class="explorer-slider" id="exp-strike" min="0.01" max="10" step="0.01" value="0.10">
+                <span class="slider-value" id="exp-strike-val">$0.10</span>
+              </div>
+
+              <div class="slider-row">
+                <label>Number of Options</label>
+                <input type="range" class="explorer-slider" id="exp-options" min="1000" max="500000" step="1000" value="50000">
+                <span class="slider-value" id="exp-options-val">50,000</span>
+              </div>
+            </div>
+
+            <div class="explorer-group">
+              <h3>Company Situation</h3>
+
+              <div class="slider-row">
+                <label>Exit Valuation</label>
+                <input type="range" class="explorer-slider" id="exp-exit" min="1000000" max="10000000000" step="1000000" value="100000000">
+                <span class="slider-value" id="exp-exit-val">$100M</span>
+              </div>
+
+              <div class="slider-row">
+                <label>Preference Floor</label>
+                <input type="range" class="explorer-slider" id="exp-floor" min="0" max="500000000" step="1000000" value="20000000">
+                <span class="slider-value" id="exp-floor-val">$20M</span>
+              </div>
+
+              <div class="slider-row">
+                <label>Future Dilution</label>
+                <input type="range" class="explorer-slider" id="exp-dilution" min="0" max="80" step="5" value="40">
+                <span class="slider-value" id="exp-dilution-val">40%</span>
+              </div>
+            </div>
+
+            <div class="explorer-group">
+              <h3>Vesting</h3>
+
+              <div class="slider-row">
+                <label>Years at Company</label>
+                <input type="range" class="explorer-slider" id="exp-years" min="0" max="4" step="0.25" value="4">
+                <span class="slider-value" id="exp-years-val">4 years</span>
+              </div>
+
+              <div class="slider-row">
+                <label>Cliff (years)</label>
+                <input type="range" class="explorer-slider" id="exp-cliff" min="0" max="2" step="0.25" value="1">
+                <span class="slider-value" id="exp-cliff-val">1 year</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Visualizations -->
+          <div class="explorer-viz">
+            <!-- Key Numbers -->
+            <div class="explorer-numbers">
+              <div class="exp-number-card exp-highlight">
+                <div class="exp-number-label">Your Payout</div>
+                <div class="exp-number-value" id="exp-payout">$0</div>
+                <div class="exp-number-sub" id="exp-payout-sub">after exercise costs</div>
+              </div>
+              <div class="exp-number-card">
+                <div class="exp-number-label">Cost to Exercise</div>
+                <div class="exp-number-value" id="exp-cost">$0</div>
+                <div class="exp-number-sub">strike × vested options</div>
+              </div>
+              <div class="exp-number-card">
+                <div class="exp-number-label">Vested Options</div>
+                <div class="exp-number-value" id="exp-vested">0</div>
+                <div class="exp-number-sub" id="exp-vested-pct">0% of grant</div>
+              </div>
+              <div class="exp-number-card">
+                <div class="exp-number-label">Post-Dilution Equity</div>
+                <div class="exp-number-value" id="exp-diluted-equity">0%</div>
+                <div class="exp-number-sub">after future funding</div>
+              </div>
+            </div>
+
+            <!-- Payout Chart -->
+            <div class="explorer-chart-section">
+              <h4>Payout at Different Exit Values</h4>
+              <div class="explorer-chart" id="exp-payout-chart"></div>
+              <div class="chart-legend">
+                <span class="legend-item"><span class="legend-dot" style="background:#4caf50"></span> Your payout</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#f44336"></span> In the red (negative)</span>
+                <span class="legend-item legend-line"></span> Current exit value
+              </div>
+            </div>
+
+            <!-- Breakdown Bar -->
+            <div class="explorer-breakdown">
+              <h4>Where the Exit Value Goes</h4>
+              <div class="breakdown-container">
+                <div class="you-arrow-label" id="exp-you-arrow">
+                  <span>You</span>
+                  <div class="arrow"></div>
+                </div>
+                <div class="breakdown-bar" id="exp-breakdown-bar">
+                  <div class="breakdown-segment" id="exp-seg-pref" title="Investor Preferences">
+                    <span>Investors</span>
+                  </div>
+                  <div class="breakdown-segment" id="exp-seg-others" title="Other Shareholders">
+                    <span>Others</span>
+                  </div>
+                  <div class="breakdown-segment" id="exp-seg-you" title="Your Share">
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              <div class="breakdown-labels">
+                <span id="exp-lbl-pref">$0</span>
+                <span id="exp-lbl-others">$0</span>
+                <span id="exp-lbl-you">$0</span>
+              </div>
+            </div>
+
+            <!-- Scenarios -->
+            <div class="explorer-scenarios">
+              <h4>Quick Scenarios</h4>
+              <div class="scenario-buttons">
+                <button class="scenario-btn" data-scenario="bust">Company Fails</button>
+                <button class="scenario-btn" data-scenario="acquihire">Acqui-hire ($10M)</button>
+                <button class="scenario-btn" data-scenario="small">Small Exit ($50M)</button>
+                <button class="scenario-btn" data-scenario="medium">Good Exit ($200M)</button>
+                <button class="scenario-btn" data-scenario="unicorn">Unicorn ($1B)</button>
+                <button class="scenario-btn" data-scenario="mega">Mega Exit ($10B)</button>
+              </div>
+            </div>
+
+            <!-- Insights -->
+            <div class="explorer-insights" id="exp-insights">
+              <div class="insight" id="insight-1"></div>
+              <div class="insight" id="insight-2"></div>
+              <div class="insight" id="insight-3"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHARE SECTION -->
+      <section class="section">
+        <h2 class="section-title">Share This Offer</h2>
+        <p class="section-subtitle">All data is encoded in the URL. Nothing is saved to any server.</p>
+
+        <!-- Company Representation -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <div class="term-value">
+              <label>
+                <input type="checkbox" class="js-companyRepresentation js-termInput" data-model-attribute="company_representation">
+                This offer is in accordance with the company's equity plan.
+              </label>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description u-muted">
+              Check this to confirm the terms match your company's official equity plan.
+            </div>
+          </div>
+        </div>
+
+        <!-- Terms of Service -->
+        <div class="term js-clearTerm">
+          <div class="term-left">
+            <div class="term-value">
+              <label>
+                <input type="checkbox" class="js-acceptToS js-termInput" data-model-attribute="accepted_tos">
+                I understand this is an educational tool, not legal or financial advice.
+              </label>
+            </div>
+          </div>
+          <div class="term-right">
+            <div class="term-description u-muted">
+              Consult with a lawyer and financial advisor for official guidance.
+            </div>
+          </div>
+        </div>
+
+        <div class="action-bar js-actionBar">
+          <div class="share-url-container">
+            <input type="text" class="share-url js-shareURL" readonly placeholder="URL will appear here...">
+            <br>
+            <button type="button" class="btn btn-secondary js-copyShareURLButton">
+              Copy Shareable URL
+            </button>
+          </div>
+          <p class="action-note">
+            Private. Everything on this page is encoded in the URL. No data is saved.
+          </p>
+        </div>
+      </section>
+
+    </form>
+  </div>
+
+  <script>
+    // ============================================
+    // CLEAR Model
+    // ============================================
+    const Clear = Backbone.Model.extend({
+      defaults: {
+        salary: null,
+        health: null,
+        dental: null,
+        vision: null,
+        retirement: null,
+        vacation_days: null,
+        number_of_options: null,
+        outstanding_shares: null,
+        equity_percent: null,
+        latest_valuation_per_share: null,
+        latest_valuation: null,
+        latest_series: 'A',
+        liquidation_preference: 1,
+        vesting_years: 4,
+        vesting_cliff_years: 1,
+        loading: 'none',
+        early_exercise: 'yes',
+        preference_floor: null,
+        strike_price: null,
+        exercise_window_years: null,
+        exercise_window_days: null,
+        net_exercise: null,
+        company_representation: null,
+        accepted_tos: false,
+        location: 'San Francisco',
+        role: 'Developer',
+        preset: 'clear1',
+        purpose: 'offer',
+        user_role: 'company'
+      },
+
+      SERIES: ['seed', 'A', 'B', 'C+'],
+
+      AVG_INVESTOR_EQUITY_PERCENT: {
+        seed: 20,
+        A: 20,
+        B: 25,
+        'C+': 25
+      },
+
+      AVG_ROUND_MARKUP_PERCENT: {
+        seed: 56,
+        A: 50,
+        B: 116,
+        'C+': 84
+      },
+
+      CAN_BUY: {
+        1: { text: 'nothing', emoji: '' },
+        10: { text: 'meal', emoji: '' },
+        100: { text: 'nice dinner', emoji: '' },
+        1000: { text: 'tv', emoji: '' },
+        10000: { text: 'used car', emoji: '' },
+        100000: { text: 'luxury car', emoji: '' },
+        1000000: { text: 'house', emoji: '' },
+        10000000: { text: 'luxury house', emoji: '' },
+        100000000: { text: 'financial freedom', emoji: '' }
+      },
+
+      companyValuation: function() {
+        return parseInt(this.get('outstanding_shares'), 10) * parseFloat(this.get('latest_valuation_per_share'), 10);
+      },
+
+      equityPercent: function() {
+        return 100 * this.equityRatio();
+      },
+
+      equityRatio: function() {
+        const fromNumShares = parseInt(this.get('number_of_options'), 10) / parseInt(this.get('outstanding_shares'), 10);
+        const fromDirectInput = parseFloat(this.get('equity_percent')) / 100;
+        return fromNumShares || fromDirectInput || 0;
+      },
+
+      latestValuation: function(options) {
+        options = options || {};
+        const fromSharesAndPerShare = parseFloat(this.get('outstanding_shares')) * parseFloat(this.get('latest_valuation_per_share'), 10);
+        const entered = parseInt(this.get('latest_valuation'));
+        if (options.useEnteredValuation) {
+          return fromSharesAndPerShare || entered;
+        }
+        return fromSharesAndPerShare;
+      },
+
+      costToExercise: function() {
+        return parseFloat(this.get('strike_price'), 10) * parseInt(this.get('number_of_options'));
+      },
+
+      ballparkPreferenceFloor: function() {
+        const series = this.get('latest_series');
+        const liqpref = parseFloat(this.get('liquidation_preference'), 10);
+        const latestValuation = this.latestValuation() || parseInt(this.get('latest_valuation'), 10);
+
+        if (latestValuation && series && liqpref) {
+          let floor = 0;
+          let i = this.SERIES.indexOf(series);
+          let thisRoundValuation = latestValuation;
+
+          while (i >= 0) {
+            const thisRoundInvestorEquity = this.AVG_INVESTOR_EQUITY_PERCENT[this.SERIES[i]] / 100;
+            floor += Math.floor((thisRoundValuation * thisRoundInvestorEquity) * liqpref);
+            i--;
+            if (i >= 0) {
+              thisRoundValuation = Math.floor(thisRoundValuation / (1 + this.AVG_ROUND_MARKUP_PERCENT[this.SERIES[i]] / 100));
+            }
+          }
+          return floor;
+        }
+        return 0;
+      },
+
+      commonOptionsInMoneyFloor: function() {
+        const costToExercise = this.costToExercise();
+        const preferenceFloor = parseFloat(this.get('preference_floor'), 10) || this.ballparkPreferenceFloor();
+        if (costToExercise && preferenceFloor) {
+          return preferenceFloor + costToExercise;
+        }
+        return undefined;
+      },
+
+      valueOfOptions: function(exitValue) {
+        const preferenceFloor = parseInt(this.get('preference_floor'), 10) || this.ballparkPreferenceFloor();
+        const series = this.get('latest_series') || this.defaults.latest_series;
+        let i = this.SERIES.indexOf(series);
+        let equityRatio = this.equityRatio();
+
+        while (i < this.SERIES.length) {
+          const dilutionNextRoundRatio = this.AVG_INVESTOR_EQUITY_PERCENT[this.SERIES[i]] / 100;
+          equityRatio = equityRatio / ((1 - equityRatio) + dilutionNextRoundRatio);
+          i++;
+        }
+
+        const value = ((exitValue - preferenceFloor) * equityRatio) - this.costToExercise();
+        return (!isNaN(value) && value !== null) ? value : undefined;
+      },
+
+      exerciseWindowYears: function() {
+        const years = parseInt(this.get('exercise_window_years'), 10);
+        const days = parseInt(this.get('exercise_window_days'), 10);
+        if (isNaN(years) && isNaN(days)) {
+          return NaN;
+        }
+        return (365 * (years || 0) + (days || 0)) / 365;
+      },
+
+      onlySetAttributes: function() {
+        const result = {};
+        _.each(this.attributes, (value, key) => {
+          if (value !== null && value !== '' && value !== undefined) {
+            result[key] = value;
+          }
+        });
+        return result;
+      }
+    });
+
+    // ============================================
+    // CLEAR View
+    // ============================================
+    const ClearView = Backbone.View.extend({
+      el: '.js-clearForm',
+
+      GOOGLE_VIZ_VERSION: '1.1',
+
+      GOOGLE_CHART_OPTIONS_STYLE: {
+        legend: { position: 'none' },
+        colors: ['#888888'],
+        chartArea: { width: '85%', top: 5 },
+        vAxis: {
+          gridlines: { color: '#eee' },
+          titleTextStyle: { color: '#757575' },
+          textStyle: { color: '#757575', fontSize: 9 },
+          baselineColor: '#e6e6e6',
+          textPosition: 'in'
+        },
+        hAxis: {
+          baselineColor: '#e6e6e6',
+          titleTextStyle: { color: '#757575' },
+          textStyle: { color: '#757575', fontSize: 9 }
+        },
+        annotations: { highContrast: true },
+        backgroundColor: { fill: 'transparent' }
+      },
+
+      presets: {
+        clear1: {
+          exercise_window_years: { value: 10, disable: true, selector: '.js-exerciseWindowYears' },
+          exercise_window_days: { value: 0, disable: true, selector: '.js-exerciseWindowDays' },
+          early_exercise: { value: 'yes', disable: true, selector: '.js-earlyExercise' },
+          loading: { value: 'none', disable: true, selector: '.js-loading' }
+        },
+        clear2: {
+          exercise_window_years: { value: 0, disable: true, selector: '.js-exerciseWindowYears' },
+          exercise_window_days: { value: 90, disable: true, selector: '.js-exerciseWindowDays' },
+          net_exercise: { value: 'yes', disable: true, selector: '.js-netExercise' },
+          early_exercise: { value: 'yes', disable: true, selector: '.js-earlyExercise' },
+          loading: { value: 'none', disable: true, selector: '.js-loading' }
+        },
+        unclear: {
+          // Custom mode - no fields are locked, user can edit everything
+        }
+      },
+
+      initialize: function() {
+        this.model = new Clear(this.decodeFromURL());
+        this.bindInputs();
+        this.updateURL();
+        this.model.on('change', this.onModelChange, this);
+        this.renderTerms({ changed: this.model.attributes });
+        this.selectPreset(this.model.get('preset'));
+
+        // Setup copy button
+        this.$('.js-copyShareURLButton').on('click', () => {
+          const urlInput = this.$('.js-shareURL')[0];
+          urlInput.select();
+          document.execCommand('copy');
+          alert('URL copied to clipboard!');
+        });
+
+        // Load Google Charts
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(() => {
+          this.chartsLoaded = true;
+          this.renderAllCharts();
+        });
+      },
+
+      bindInputs: function() {
+        const self = this;
+
+        // Bind all inputs with data-model-attribute
+        this.$('[data-model-attribute]').each(function() {
+          const $input = $(this);
+          const attr = $input.data('model-attribute');
+          const isNumeric = self.isNumericField(attr);
+
+          // Set initial value from model
+          const modelVal = self.model.get(attr);
+          if (modelVal !== null && modelVal !== undefined) {
+            if ($input.is(':checkbox')) {
+              $input.prop('checked', modelVal === true || modelVal === 'true');
+            } else if ($input.is(':radio')) {
+              $input.prop('checked', $input.val() === modelVal);
+            } else if (isNumeric && !isNaN(parseFloat(modelVal))) {
+              // Format numeric values with commas
+              $input.val(self.formatWithCommas(modelVal));
+            } else {
+              $input.val(modelVal);
+            }
+          }
+
+          // Bind change events
+          $input.on('change input', function() {
+            let val;
+            if ($input.is(':checkbox')) {
+              val = $input.prop('checked');
+            } else if ($input.is(':radio')) {
+              if ($input.prop('checked')) {
+                val = $input.val();
+              } else {
+                return; // Don't update for unchecked radios
+              }
+            } else if (isNumeric) {
+              // Parse numbers with k/m/b suffixes
+              val = self.parseNumberWithSuffix($input.val());
+              if (!isNaN(val)) {
+                self.model.set(attr, val);
+              }
+              return;
+            } else {
+              val = $input.val();
+            }
+            self.model.set(attr, val);
+          });
+
+          // Format numeric inputs on blur (when user leaves field)
+          if (isNumeric) {
+            $input.on('blur', function() {
+              const val = self.model.get(attr);
+              if (val !== null && val !== undefined && !isNaN(parseFloat(val))) {
+                $input.val(self.formatWithCommas(val));
+              }
+            });
+          }
+        });
+      },
+
+      onModelChange: function(model) {
+        this.renderTerms({ changed: model.changed });
+        this.updateURL();
+        this.syncInputs(model.changed);
+        this.warnAgainstMistakes();
+      },
+
+      syncInputs: function(changed) {
+        const self = this;
+        // Sync changed values back to inputs (for computed fields)
+        _.each(changed, (value, attr) => {
+          const isNumeric = self.isNumericField(attr);
+          this.$(`[data-model-attribute="${attr}"]`).each(function() {
+            const $input = $(this);
+            if ($input.is(':checkbox')) {
+              $input.prop('checked', value === true || value === 'true');
+            } else if ($input.is(':radio')) {
+              $input.prop('checked', $input.val() === value);
+            } else if (!$input.is(':focus')) {
+              // Don't update focused inputs to avoid cursor jumping
+              // Format numeric values with commas
+              if (isNumeric && !isNaN(parseFloat(value))) {
+                $input.val(self.formatWithCommas(value));
+              } else {
+                $input.val(value);
+              }
+            }
+          });
+        });
+      },
+
+      updateURL: function() {
+        const encoded = window.location.pathname + '?' + this.encodeForURL() + window.location.hash;
+        history.replaceState({}, document.title, encoded);
+        this.$('.js-shareURL').val(window.location.href);
+      },
+
+      encodeForURL: function() {
+        return btoa(JSON.stringify(this.model.onlySetAttributes()));
+      },
+
+      decodeFromURL: function() {
+        try {
+          const query = window.location.search.split('?')[1];
+          if (query) {
+            return JSON.parse(atob(query));
+          }
+        } catch (e) {
+          console.log('Could not decode URL state:', e);
+        }
+        return {};
+      },
+
+      renderTerms: function(change) {
+        _.each(change.changed, (newVal, term) => {
+          if (typeof this.onRenderTerm[term] === 'function') {
+            this.onRenderTerm[term].call(this, newVal);
+          }
+        });
+
+        // Update calculated displays
+        this.updateCalculatedDisplays();
+
+        // Update charts if loaded
+        if (this.chartsLoaded) {
+          this.renderAllCharts();
+        }
+      },
+
+      onRenderTerm: {
+        retirement: function() {
+          const retirement = this.model.get('retirement');
+          this.$('.js-retire').addClass('u-hidden');
+          this.$('.js-retire.' + (retirement === 'yes' ? 'yes' : 'no')).removeClass('u-hidden');
+        },
+
+        number_of_options: function() {
+          this.renderEquity();
+        },
+
+        outstanding_shares: function() {
+          this.renderEquity();
+          this.renderPreferenceFloor();
+        },
+
+        latest_valuation_per_share: function() {
+          this.renderPreferenceFloor();
+        },
+
+        vesting_years: function() {
+          this.renderVesting();
+        },
+
+        vesting_cliff_years: function() {
+          this.renderVesting();
+        },
+
+        loading: function() {
+          const loading = this.model.get('loading');
+          this.$('.js-loadingExplanation').addClass('u-hidden');
+          if (loading === 'none' || !loading) {
+            this.$('.js-loadingExplanation.js-noLoading').removeClass('u-hidden');
+            this.$('.js-loadingChart').addClass('u-hidden');
+          } else if (loading === 'front-loaded') {
+            this.$('.js-loadingExplanation.js-frontLoading').removeClass('u-hidden');
+            this.$('.js-loadingChart').addClass('u-hidden');
+          } else if (loading === 'back-loaded') {
+            this.$('.js-loadingChart').removeClass('u-hidden');
+            this.$('.js-loadingExplanation.js-backLoading').removeClass('u-hidden');
+          }
+        },
+
+        early_exercise: function() {
+          this.$('.js-earlyExerciseExplanation').addClass('u-hidden');
+          if (this.model.get('early_exercise') === 'yes') {
+            this.$('.js-earlyExerciseExplanation.js-yes').removeClass('u-hidden');
+          } else {
+            this.$('.js-earlyExerciseExplanation.js-no').removeClass('u-hidden');
+          }
+        },
+
+        net_exercise: function() {
+          this.$('.js-netExerciseExplanation').addClass('u-hidden');
+          if (this.model.get('net_exercise') === 'yes') {
+            this.$('.js-netExerciseExplanation.js-yes').removeClass('u-hidden');
+          } else {
+            this.$('.js-netExerciseExplanation.js-no').removeClass('u-hidden');
+          }
+        },
+
+        preset: function() {
+          this.$('.js-presetText').addClass('u-hidden');
+          this.$('.js-presetText.js-' + this.model.get('preset')).removeClass('u-hidden');
+        },
+
+        preference_floor: function() {
+          this.renderPreferenceFloor();
+        },
+
+        strike_price: function() {
+          this.renderPreferenceFloor();
+          this.renderStrikePrice();
+        }
+      },
+
+      updateCalculatedDisplays: function() {
+        // Number of options text
+        const numOptions = parseInt(this.model.get('number_of_options'), 10);
+        if (!isNaN(numOptions)) {
+          this.$('.js-numberOfOptionsText').text(this.formatLarge(numOptions));
+        }
+
+        // Equity percent text
+        const equityPercent = this.model.equityPercent();
+        if (!isNaN(equityPercent)) {
+          this.$('.js-equityPercentText').text(this.formatPercent(equityPercent / 100));
+        }
+
+        // Outstanding shares text
+        const outstandingShares = parseInt(this.model.get('outstanding_shares'), 10);
+        if (!isNaN(outstandingShares)) {
+          this.$('.js-outstandingSharesText').text(this.formatLarge(outstandingShares));
+        }
+
+        // Company valuation
+        const companyVal = this.model.companyValuation();
+        if (!isNaN(companyVal)) {
+          this.$('.js-companyValuationText').text(this.formatLargeCurrency(companyVal));
+        }
+
+        // Latest valuation per share
+        const latestValPerShare = parseFloat(this.model.get('latest_valuation_per_share'), 10);
+        if (!isNaN(latestValPerShare)) {
+          this.$('.js-latestValuationPerShareText').text(this.formatSmallCurrency(latestValPerShare));
+        }
+
+        // Vesting text
+        const vestingYears = parseFloat(this.model.get('vesting_years'), 10);
+        const cliffYears = parseFloat(this.model.get('vesting_cliff_years'), 10);
+        if (!isNaN(vestingYears)) {
+          this.$('.js-vestingYearsText').text(this.pluralizeYears(vestingYears));
+        }
+        if (!isNaN(cliffYears)) {
+          this.$('.js-vestingCliffYearsText').text(this.pluralizeYears(cliffYears));
+        }
+
+        // Strike price text
+        const strikePrice = parseFloat(this.model.get('strike_price'), 10);
+        if (!isNaN(strikePrice)) {
+          this.$('.js-strikePriceText').text(this.formatSmallCurrency(strikePrice));
+        }
+
+        // Cost to exercise
+        const costToExercise = this.model.costToExercise();
+        if (!isNaN(costToExercise)) {
+          this.$('.js-costToExerciseText').text(this.formatLargeCurrency(costToExercise));
+        }
+
+        // Exercise window text
+        const ewYears = parseInt(this.model.get('exercise_window_years'), 10);
+        const ewDays = parseInt(this.model.get('exercise_window_days'), 10);
+        let ewText = '';
+        if (ewYears) ewText += ewYears + ' years';
+        if (ewYears && ewDays) ewText += ', ';
+        if (ewDays) ewText += ewDays + ' days';
+        this.$('.js-exerciseWindowText').text(ewText || 'this long');
+
+        // Preference floor
+        const preferenceFloor = parseFloat(this.model.get('preference_floor'), 10);
+        if (!isNaN(preferenceFloor)) {
+          this.$('.js-preferenceFloorText').text(this.formatLargeCurrency(preferenceFloor));
+        }
+
+        // Options in money floor
+        const optionsInMoney = this.model.commonOptionsInMoneyFloor();
+        if (optionsInMoney && !isNaN(optionsInMoney)) {
+          this.$('.js-preferenceFloorIncreaseOptionsInMoney').text(this.formatLargeCurrency(optionsInMoney));
+        }
+
+        // Update comparable exits table
+        this.updateComparableExits();
+      },
+
+      updateComparableExits: function() {
+        const self = this;
+        const optionsInMoney = this.model.commonOptionsInMoneyFloor();
+
+        this.$('.js-comparableExit').each(function() {
+          const $row = $(this);
+          const approxVal = parseInt($row.data('approx-val'), 10);
+
+          if (!isNaN(approxVal)) {
+            // Hide rows below the floor
+            if (!isNaN(optionsInMoney) && optionsInMoney >= approxVal) {
+              $row.hide();
+            } else {
+              $row.show();
+            }
+
+            const valueOfOptions = self.model.valueOfOptions(approxVal);
+            if (!isNaN(valueOfOptions) && valueOfOptions > 0) {
+              $row.find('.js-withOptionsWorth').text(self.formatLargeCurrency(valueOfOptions));
+
+              // Determine what you can buy
+              const closestMagnitude = Math.pow(10, Math.round(Math.log(valueOfOptions) / Math.LN10));
+              const canBuy = self.model.CAN_BUY[closestMagnitude] || self.model.CAN_BUY[100000000];
+
+              let buyText = '';
+              if (canBuy.text !== 'financial freedom' && canBuy.text !== 'nothing') {
+                const count = Math.max(1, Math.floor(valueOfOptions / closestMagnitude));
+                buyText = count > 1 ? count + ' ' + canBuy.text + 's' : 'a ' + canBuy.text;
+              } else {
+                buyText = canBuy.text;
+              }
+              $row.find('.js-canBuy').text(buyText);
+            } else {
+              $row.find('.js-withOptionsWorth').text('-');
+              $row.find('.js-canBuy').text('nothing');
+            }
+
+            $row.find('.js-approxVal').text(self.formatLargeCurrency(approxVal));
+          }
+        });
+      },
+
+      renderEquity: function() {
+        const numOptions = parseInt(this.model.get('number_of_options'), 10);
+        const outstandingShares = parseInt(this.model.get('outstanding_shares'), 10);
+
+        if (!isNaN(numOptions) && !isNaN(outstandingShares) && numOptions < outstandingShares) {
+          // Calculate equity percent from shares
+          const equityPercent = parseFloat((100 * (numOptions / outstandingShares)).toFixed(7), 10);
+          const currentEquity = parseFloat(this.model.get('equity_percent'), 10);
+          if (currentEquity !== equityPercent) {
+            this.model.set('equity_percent', equityPercent, { silent: true });
+            this.$('.js-equityPercent').val(equityPercent.toFixed(4));
+          }
+
+          // Calculate dilution scenario
+          const investorEquity = 0.2;
+          const newShares = Math.ceil((investorEquity * outstandingShares) / (1.0 - investorEquity));
+          const newTotalShares = newShares + outstandingShares;
+          const equityPostDilution = numOptions / newTotalShares;
+
+          this.$('.js-newInvestorShares').text(this.formatLarge(newShares));
+          this.$('.js-newSharesOutstanding').text(this.formatLarge(newTotalShares));
+          this.$('.js-equityPercentPostDilution').text(this.formatPercent(equityPostDilution));
+
+          this.$('.js-dilutionExplanation').addClass('u-hidden');
+          this.$('.js-dilutionExplanation.js-withNumbers').removeClass('u-hidden');
+        } else {
+          this.$('.js-dilutionExplanation').addClass('u-hidden');
+          this.$('.js-dilutionExplanation.js-noNumbers').removeClass('u-hidden');
+        }
+      },
+
+      renderVesting: function() {
+        const years = parseFloat(this.model.get('vesting_years'), 10);
+        const cliffYears = parseFloat(this.model.get('vesting_cliff_years'), 10);
+
+        this.$('.js-vestingExplanation').addClass('u-hidden');
+        if (!isNaN(years) && !isNaN(cliffYears)) {
+          this.$('.js-vestingExplanation.js-withNumbers').removeClass('u-hidden');
+        } else {
+          this.$('.js-vestingExplanation.js-noNumbers').removeClass('u-hidden');
+        }
+      },
+
+      renderPreferenceFloor: function() {
+        const preferenceFloor = parseFloat(this.model.get('preference_floor'), 10);
+        const strikePrice = parseFloat(this.model.get('strike_price'), 10);
+        const outstandingShares = parseFloat(this.model.get('outstanding_shares'), 10);
+        const latestValuation = this.model.latestValuation();
+
+        this.$('.js-preferenceFloorExplanation').addClass('u-hidden');
+        if (!isNaN(preferenceFloor) && !isNaN(latestValuation) && !isNaN(outstandingShares)) {
+          this.$('.js-preferenceFloorExplanation.js-aboveLatestValuation').removeClass('u-hidden');
+          if (!isNaN(strikePrice)) {
+            this.$('.js-preferenceFloorExplanation.js-aboveExerciseCost').removeClass('u-hidden');
+          }
+        } else {
+          this.$('.js-preferenceFloorExplanation.js-noNumbers').removeClass('u-hidden');
+        }
+      },
+
+      renderStrikePrice: function() {
+        const strikePrice = parseFloat(this.model.get('strike_price'), 10);
+        const numOptions = parseInt(this.model.get('number_of_options'), 10);
+
+        if (!isNaN(strikePrice) && !isNaN(numOptions)) {
+          this.$('.js-strikePriceExplanation.js-numbers').removeClass('u-hidden');
+        } else {
+          this.$('.js-strikePriceExplanation.js-numbers').addClass('u-hidden');
+        }
+      },
+
+      selectPreset: function(preset) {
+        if (!preset || !this.presets[preset]) return;
+
+        this.model.set('preset', preset);
+
+        // Enable all inputs first
+        this.$('.js-disabledFromClear').each(function() {
+          $(this).prop('disabled', false).removeClass('js-disabledFromClear');
+        });
+
+        // Apply preset values and lock inputs
+        const presetConfig = this.presets[preset];
+        _.each(presetConfig, (config, attr) => {
+          if (config.value !== null && config.value !== undefined) {
+            this.model.set(attr, config.value);
+            this.$(`[data-model-attribute="${attr}"]`).val(config.value);
+          }
+
+          if (config.disable && config.selector) {
+            const $input = this.$(config.selector);
+            $input.prop('disabled', true).addClass('js-disabledFromClear');
+          }
+        });
+
+        // Update radio buttons
+        this.$('.js-preset').each(function() {
+          $(this).prop('checked', $(this).val() === preset);
+        });
+
+        // Update preset text
+        this.$('.js-presetText').addClass('u-hidden');
+        this.$('.js-presetText.js-' + preset).removeClass('u-hidden');
+      },
+
+      warnAgainstMistakes: function() {
+        this.clearWarnings();
+
+        const noNetExercise = this.model.get('net_exercise') !== 'yes';
+        const shortWindow = this.model.exerciseWindowYears() < 2;
+
+        if (noNetExercise && shortWindow) {
+          this.warnTerms(['.js-netExercise', '.js-exerciseWindowYears'],
+            'You can lose all the stock you earn with a short exercise window and no net-exercise');
+        }
+
+        const noEarlyExercise = this.model.get('early_exercise') !== 'yes';
+        if (noEarlyExercise) {
+          this.warnTerms(['.js-earlyExercise'],
+            'While you have to pay and take on some risk, early-exercise can save a lot of tax.');
+        }
+      },
+
+      warnTerms: function(selectors, message) {
+        selectors.forEach(selector => {
+          const $input = this.$(selector);
+          const $term = $input.closest('.js-clearTerm');
+          $term.addClass('js-termWarning');
+          $term.attr('title', message);
+        });
+      },
+
+      clearWarnings: function() {
+        this.$('.js-termWarning').removeClass('js-termWarning').removeAttr('title');
+      },
+
+      // Chart rendering
+      renderAllCharts: function() {
+        this.renderVestingChart();
+        this.renderLoadingChart();
+        this.renderOptionsInMoneyChart();
+      },
+
+      renderVestingChart: function() {
+        const vestingYears = parseFloat(this.model.get('vesting_years'), 10);
+        const numOptions = parseInt(this.model.get('number_of_options'), 10);
+        const cliffYears = parseFloat(this.model.get('vesting_cliff_years'), 10) || 0;
+        const loading = this.model.get('loading');
+
+        if (isNaN(vestingYears) || isNaN(numOptions) || numOptions === 0) return;
+
+        const data = this.vestingChartSeries(numOptions, vestingYears, cliffYears, loading);
+        const chartData = google.visualization.arrayToDataTable(data);
+
+        const options = JSON.parse(JSON.stringify(this.GOOGLE_CHART_OPTIONS_STYLE));
+        options.hAxis = options.hAxis || {};
+        options.vAxis = options.vAxis || {};
+        options.hAxis.title = 'years';
+        options.hAxis.viewWindow = { max: vestingYears, min: 0 };
+        options.vAxis.title = 'vested options';
+        options.vAxis.viewWindow = { max: numOptions, min: 0 };
+        options.vAxis.format = 'short';
+
+        const chartContainer = this.$('.js-vestingChart')[0];
+        if (chartContainer) {
+          const chart = new google.visualization.LineChart(chartContainer);
+          chart.draw(chartData, options);
+        }
+      },
+
+      renderLoadingChart: function() {
+        if (this.model.get('loading') !== 'back-loaded') return;
+
+        const vestingYears = parseFloat(this.model.get('vesting_years'), 10) || 4;
+        const numOptions = parseInt(this.model.get('number_of_options'), 10) || 1000;
+        const cliffYears = parseFloat(this.model.get('vesting_cliff_years'), 10) || 0;
+
+        const largerScalar = 1.75;
+        const noLoading = this.vestingChartSeries(numOptions, vestingYears, cliffYears, null);
+        const backLoadingEqual = this.vestingChartSeries(numOptions, vestingYears, cliffYears, 'back-loaded');
+        const backLoadingMore = this.vestingChartSeries(numOptions * largerScalar, vestingYears, cliffYears, 'back-loaded');
+
+        const allLoadings = [['year', 'no loading', 'backloaded equal', 'backloaded larger']];
+        for (let i = 1; i < noLoading.length; i++) {
+          allLoadings.push([noLoading[i][0], noLoading[i][1], backLoadingEqual[i][1], backLoadingMore[i][1]]);
+        }
+
+        const options = JSON.parse(JSON.stringify(this.GOOGLE_CHART_OPTIONS_STYLE));
+        options.hAxis = options.hAxis || {};
+        options.vAxis = options.vAxis || {};
+        options.hAxis.title = 'years';
+        options.hAxis.viewWindow = { max: vestingYears, min: 0 };
+        options.vAxis.title = 'vested options';
+        options.vAxis.viewWindow = { max: numOptions * largerScalar, min: 0 };
+        options.vAxis.format = 'short';
+        options.legend = { position: 'bottom' };
+        options.colors = ['#888', '#C0423F', '#007047'];
+
+        const chartContainer = this.$('.js-loadingChart')[0];
+        if (chartContainer) {
+          const chart = new google.visualization.LineChart(chartContainer);
+          chart.draw(google.visualization.arrayToDataTable(allLoadings), options);
+        }
+      },
+
+      renderOptionsInMoneyChart: function() {
+        const inMoneyFloor = this.model.commonOptionsInMoneyFloor();
+        if (!inMoneyFloor || isNaN(inMoneyFloor)) return;
+
+        const data = [['exit value', 'value of your options'], [0, 0]];
+        const maxValForChart = inMoneyFloor * 1.4;
+        const numPlotPoints = 6;
+        const increment = Math.floor((maxValForChart - inMoneyFloor) / numPlotPoints);
+
+        for (let i = 0; i < numPlotPoints; i++) {
+          const increase = i * increment;
+          data.push([inMoneyFloor + increase, increase]);
+        }
+
+        const options = JSON.parse(JSON.stringify(this.GOOGLE_CHART_OPTIONS_STYLE));
+        options.hAxis = options.hAxis || {};
+        options.vAxis = options.vAxis || {};
+        options.hAxis.title = 'company value';
+        options.hAxis.viewWindow = { min: 0, max: maxValForChart };
+        options.hAxis.format = 'short';
+        options.vAxis.title = 'your payout';
+        options.vAxis.viewWindow = { min: 0, max: maxValForChart - inMoneyFloor };
+        options.vAxis.format = 'short';
+
+        const chartContainer = this.$('.js-optionsInMoneyChart')[0];
+        if (chartContainer) {
+          const chart = new google.visualization.LineChart(chartContainer);
+          chart.draw(google.visualization.arrayToDataTable(data), options);
+        }
+      },
+
+      vestingChartSeries: function(numOptions, vestingYears, cliffYears, loading) {
+        const data = [['year', '# vested']];
+        const degree = 3;
+
+        let optionsAtYear;
+        if (loading === 'front-loaded') {
+          const coefficient = numOptions / Math.pow(vestingYears, 1 / degree);
+          optionsAtYear = (year) => Math.floor(coefficient * Math.pow(year, 1 / degree));
+        } else if (loading === 'back-loaded') {
+          const coefficient = numOptions / Math.pow(vestingYears, degree);
+          optionsAtYear = (year) => Math.floor(coefficient * Math.pow(year, degree));
+        } else {
+          const coefficient = numOptions / vestingYears;
+          optionsAtYear = (year) => Math.floor(coefficient * year);
+        }
+
+        // Pre-cliff zeroes
+        for (let i = 0; i < Math.floor(cliffYears); i++) {
+          data.push([i, 0]);
+        }
+
+        // Cliff point
+        data.push([cliffYears, 0]);
+        data.push([cliffYears, optionsAtYear(cliffYears)]);
+
+        // Post-cliff vesting
+        for (let i = Math.ceil(cliffYears); i <= vestingYears; i++) {
+          data.push([i, optionsAtYear(i)]);
+        }
+
+        return data;
+      },
+
+      // Number parsing - supports k, m, b suffixes (e.g., "2.5B", "4.3k", "10M")
+      parseNumberWithSuffix: function(value) {
+        if (value === null || value === undefined || value === '') return NaN;
+
+        // If it's already a number, return it
+        if (typeof value === 'number') return value;
+
+        // Convert to string and clean up
+        let str = String(value).trim().toLowerCase().replace(/,/g, '');
+
+        // Check for suffix
+        const suffixes = {
+          'k': 1000,
+          'm': 1000000,
+          'b': 1000000000,
+          't': 1000000000000
+        };
+
+        let multiplier = 1;
+        const lastChar = str.slice(-1);
+        if (suffixes[lastChar]) {
+          multiplier = suffixes[lastChar];
+          str = str.slice(0, -1);
+        }
+
+        const num = parseFloat(str);
+        if (isNaN(num)) return NaN;
+
+        return num * multiplier;
+      },
+
+      // Format number with commas (e.g., 1234567 -> "1,234,567")
+      formatWithCommas: function(number) {
+        const num = parseFloat(number);
+        if (isNaN(num)) return '';
+
+        // For whole numbers, no decimals
+        if (Number.isInteger(num)) {
+          return num.toLocaleString('en-US');
+        }
+        // For decimals, preserve reasonable precision
+        return num.toLocaleString('en-US', { maximumFractionDigits: 4 });
+      },
+
+      // Check if a field should use number parsing
+      isNumericField: function(attr) {
+        const numericFields = [
+          'salary', 'number_of_options', 'outstanding_shares', 'equity_percent',
+          'latest_valuation_per_share', 'latest_valuation', 'preference_floor',
+          'strike_price', 'vesting_years', 'vesting_cliff_years',
+          'exercise_window_years', 'exercise_window_days', 'liquidation_preference',
+          'vacation_days'
+        ];
+        return numericFields.includes(attr);
+      },
+
+      // Formatting helpers
+      formatLarge: function(number) {
+        const float = parseFloat(number, 10);
+        if (isNaN(float)) return undefined;
+        return float.toLocaleString('en-US', { maximumSignificantDigits: 3 });
+      },
+
+      formatLargeCurrency: function(number) {
+        const float = parseFloat(number, 10);
+        if (isNaN(float)) return undefined;
+        return float.toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumSignificantDigits: 3
+        });
+      },
+
+      formatSmallCurrency: function(number) {
+        const float = parseFloat(number, 10);
+        if (isNaN(float)) return undefined;
+        return float.toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD'
+        });
+      },
+
+      formatPercent: function(number) {
+        const float = parseFloat(number, 10);
+        if (isNaN(float)) return undefined;
+        return float.toLocaleString('en-US', {
+          style: 'percent',
+          minimumSignificantDigits: 1,
+          maximumSignificantDigits: 3
+        });
+      },
+
+      pluralizeYears: function(years) {
+        return years + (years > 1 ? ' years' : ' year');
+      }
+    });
+
+    // Initialize the app when DOM is ready
+    $(document).ready(function() {
+      window.clearView = new ClearView();
+
+      // ============================================
+      // Interactive Explorer
+      // ============================================
+      const Explorer = {
+        // Slider elements
+        sliders: {
+          equity: document.getElementById('exp-equity'),
+          strike: document.getElementById('exp-strike'),
+          options: document.getElementById('exp-options'),
+          exit: document.getElementById('exp-exit'),
+          floor: document.getElementById('exp-floor'),
+          dilution: document.getElementById('exp-dilution'),
+          years: document.getElementById('exp-years'),
+          cliff: document.getElementById('exp-cliff')
+        },
+
+        // Value display elements
+        values: {
+          equity: document.getElementById('exp-equity-val'),
+          strike: document.getElementById('exp-strike-val'),
+          options: document.getElementById('exp-options-val'),
+          exit: document.getElementById('exp-exit-val'),
+          floor: document.getElementById('exp-floor-val'),
+          dilution: document.getElementById('exp-dilution-val'),
+          years: document.getElementById('exp-years-val'),
+          cliff: document.getElementById('exp-cliff-val')
+        },
+
+        // Scenarios
+        scenarios: {
+          bust: { exit: 0 },
+          acquihire: { exit: 10000000 },
+          small: { exit: 50000000 },
+          medium: { exit: 200000000 },
+          unicorn: { exit: 1000000000 },
+          mega: { exit: 10000000000 }
+        },
+
+        init: function() {
+          // Bind slider events
+          Object.keys(this.sliders).forEach(key => {
+            if (this.sliders[key]) {
+              this.sliders[key].addEventListener('input', () => this.update());
+            }
+          });
+
+          // Bind scenario buttons
+          document.querySelectorAll('.scenario-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const scenario = e.target.dataset.scenario;
+              this.applyScenario(scenario);
+            });
+          });
+
+          // Initial update
+          this.update();
+        },
+
+        getValues: function() {
+          return {
+            equity: parseFloat(this.sliders.equity?.value || 0.5),
+            strike: parseFloat(this.sliders.strike?.value || 0.1),
+            options: parseInt(this.sliders.options?.value || 50000),
+            exit: parseFloat(this.sliders.exit?.value || 100000000),
+            floor: parseFloat(this.sliders.floor?.value || 20000000),
+            dilution: parseFloat(this.sliders.dilution?.value || 40),
+            years: parseFloat(this.sliders.years?.value || 4),
+            cliff: parseFloat(this.sliders.cliff?.value || 1)
+          };
+        },
+
+        formatCurrency: function(num) {
+          if (num >= 1000000000) return '$' + (num / 1000000000).toFixed(1) + 'B';
+          if (num >= 1000000) return '$' + (num / 1000000).toFixed(1) + 'M';
+          if (num >= 1000) return '$' + (num / 1000).toFixed(0) + 'K';
+          return '$' + num.toFixed(0);
+        },
+
+        formatNumber: function(num) {
+          return num.toLocaleString('en-US');
+        },
+
+        update: function() {
+          const v = this.getValues();
+
+          // Update slider value displays
+          this.values.equity.textContent = v.equity.toFixed(2) + '%';
+          this.values.strike.textContent = '$' + v.strike.toFixed(2);
+          this.values.options.textContent = this.formatNumber(v.options);
+          this.values.exit.textContent = this.formatCurrency(v.exit);
+          this.values.floor.textContent = this.formatCurrency(v.floor);
+          this.values.dilution.textContent = v.dilution + '%';
+          this.values.years.textContent = v.years + (v.years === 1 ? ' year' : ' years');
+          this.values.cliff.textContent = v.cliff + (v.cliff === 1 ? ' year' : ' years');
+
+          // Calculate vested options
+          let vestedPct = 0;
+          if (v.years < v.cliff) {
+            vestedPct = 0; // Before cliff, nothing vested
+          } else {
+            vestedPct = Math.min(v.years / 4, 1); // 4-year vesting
+          }
+          const vestedOptions = Math.floor(v.options * vestedPct);
+
+          // Calculate post-dilution equity
+          const dilutedEquity = v.equity * (1 - v.dilution / 100);
+
+          // Calculate cost to exercise
+          const exerciseCost = v.strike * vestedOptions;
+
+          // Calculate payout
+          let payout = 0;
+          if (v.exit > v.floor) {
+            const remainingValue = v.exit - v.floor;
+            const yourShare = remainingValue * (dilutedEquity / 100);
+            payout = yourShare - exerciseCost;
+          } else {
+            payout = -exerciseCost; // Below floor, you just lose exercise cost
+          }
+
+          // Update display
+          const payoutEl = document.getElementById('exp-payout');
+          const payoutCard = payoutEl?.closest('.exp-number-card');
+          const payoutSub = document.getElementById('exp-payout-sub');
+
+          if (payoutEl) {
+            if (v.exit === 0) {
+              payoutEl.textContent = '$0';
+              payoutCard?.classList.remove('exp-negative');
+              payoutCard?.classList.add('exp-highlight');
+              if (payoutSub) payoutSub.textContent = 'company failed';
+            } else if (payout >= 0) {
+              payoutEl.textContent = this.formatCurrency(payout);
+              payoutCard?.classList.remove('exp-negative');
+              payoutCard?.classList.add('exp-highlight');
+              if (payoutSub) payoutSub.textContent = 'after exercise costs';
+            } else {
+              payoutEl.textContent = '-' + this.formatCurrency(Math.abs(payout));
+              payoutCard?.classList.remove('exp-highlight');
+              payoutCard?.classList.add('exp-negative');
+              if (payoutSub) payoutSub.textContent = 'options underwater';
+            }
+          }
+
+          document.getElementById('exp-cost').textContent = this.formatCurrency(exerciseCost);
+          document.getElementById('exp-vested').textContent = this.formatNumber(vestedOptions);
+          document.getElementById('exp-vested-pct').textContent = (vestedPct * 100).toFixed(0) + '% of grant';
+          document.getElementById('exp-diluted-equity').textContent = dilutedEquity.toFixed(3) + '%';
+
+          // Update breakdown bar
+          this.updateBreakdown(v, payout, dilutedEquity, exerciseCost);
+
+          // Update chart
+          this.updateChart(v, dilutedEquity);
+
+          // Update insights
+          this.updateInsights(v, payout, vestedPct, dilutedEquity, exerciseCost);
+        },
+
+        updateBreakdown: function(v, payout, dilutedEquity, exerciseCost) {
+          const arrowEl = document.getElementById('exp-you-arrow');
+
+          if (v.exit === 0) {
+            document.getElementById('exp-seg-pref').style.width = '0%';
+            document.getElementById('exp-seg-others').style.width = '100%';
+            document.getElementById('exp-seg-you').style.width = '0%';
+            document.getElementById('exp-lbl-pref').textContent = '$0';
+            document.getElementById('exp-lbl-others').textContent = 'N/A';
+            document.getElementById('exp-lbl-you').textContent = '$0';
+            if (arrowEl) arrowEl.classList.add('hidden');
+            return;
+          }
+
+          const investorsPct = Math.min(v.floor / v.exit * 100, 100);
+          const remaining = v.exit - v.floor;
+          const yourGross = remaining > 0 ? remaining * (dilutedEquity / 100) : 0;
+          const yourPct = (yourGross / v.exit) * 100;
+          const othersPct = Math.max(100 - investorsPct - yourPct, 0);
+
+          document.getElementById('exp-seg-pref').style.width = investorsPct + '%';
+          document.getElementById('exp-seg-others').style.width = othersPct + '%';
+          document.getElementById('exp-seg-you').style.width = yourPct + '%';
+
+          document.getElementById('exp-lbl-pref').textContent = this.formatCurrency(Math.min(v.floor, v.exit));
+          document.getElementById('exp-lbl-others').textContent = this.formatCurrency(remaining * (1 - dilutedEquity / 100));
+          document.getElementById('exp-lbl-you').textContent = this.formatCurrency(yourGross);
+
+          // Position arrow label above "You" segment
+          if (arrowEl) {
+            if (yourPct > 0) {
+              // Position arrow at center of "You" segment
+              const arrowPos = investorsPct + othersPct + (yourPct / 2);
+              arrowEl.style.left = arrowPos + '%';
+              arrowEl.classList.remove('hidden');
+              // Update arrow label to show amount
+              arrowEl.querySelector('span').textContent = 'You: ' + this.formatCurrency(yourGross);
+            } else {
+              arrowEl.classList.add('hidden');
+            }
+          }
+        },
+
+        updateChart: function(v, dilutedEquity) {
+          const chartEl = document.getElementById('exp-payout-chart');
+          if (!chartEl || typeof google === 'undefined' || !google.visualization) return;
+
+          const data = [['Exit Value', 'Your Payout', { role: 'style' }]];
+          const exits = [0, 10000000, 25000000, 50000000, 100000000, 200000000, 500000000, 1000000000, 2000000000, 5000000000, 10000000000];
+
+          exits.forEach(exit => {
+            let payout = 0;
+            if (exit > v.floor) {
+              const remaining = exit - v.floor;
+              const yourShare = remaining * (dilutedEquity / 100);
+              payout = yourShare - (v.strike * v.options);
+            } else {
+              payout = -(v.strike * v.options);
+            }
+            const color = payout >= 0 ? '#4caf50' : '#f44336';
+            data.push([exit, payout, color]);
+          });
+
+          const chartData = google.visualization.arrayToDataTable(data);
+          const options = {
+            legend: 'none',
+            backgroundColor: 'transparent',
+            chartArea: { width: '85%', height: '80%' },
+            hAxis: {
+              title: 'Exit Value',
+              format: 'short',
+              textStyle: { fontSize: 10, color: '#666' },
+              gridlines: { color: '#eee' }
+            },
+            vAxis: {
+              title: 'Your Payout',
+              format: 'short',
+              textStyle: { fontSize: 10, color: '#666' },
+              gridlines: { color: '#eee' },
+              baseline: 0,
+              baselineColor: '#333'
+            },
+            bar: { groupWidth: '80%' }
+          };
+
+          const chart = new google.visualization.ColumnChart(chartEl);
+          chart.draw(chartData, options);
+        },
+
+        updateInsights: function(v, payout, vestedPct, dilutedEquity, exerciseCost) {
+          const insights = [];
+
+          // Cliff insight
+          if (v.years < v.cliff) {
+            insights.push(`<span class="bad">You haven't hit your ${v.cliff}-year cliff yet.</span> If you leave now, you get nothing.`);
+          }
+
+          // Payout insight
+          if (payout > 1000000) {
+            insights.push(`At a <strong>${this.formatCurrency(v.exit)}</strong> exit, your payout would be <span class="good">${this.formatCurrency(payout)}</span>!`);
+          } else if (payout > 100000) {
+            insights.push(`At a <strong>${this.formatCurrency(v.exit)}</strong> exit, your payout would be <span class="good">${this.formatCurrency(payout)}</span>.`);
+          } else if (payout > 0) {
+            insights.push(`At a <strong>${this.formatCurrency(v.exit)}</strong> exit, your payout would be ${this.formatCurrency(payout)}.`);
+          } else if (v.exit > 0 && payout <= 0) {
+            insights.push(`At a <strong>${this.formatCurrency(v.exit)}</strong> exit, <span class="bad">your options would be underwater</span> (exit below preference floor + exercise cost).`);
+          }
+
+          // Floor insight
+          if (v.exit > 0 && v.exit <= v.floor) {
+            insights.push(`The exit is below the <strong>${this.formatCurrency(v.floor)}</strong> preference floor. <span class="bad">Investors get paid first, you get nothing.</span>`);
+          }
+
+          // Dilution insight
+          if (v.dilution > 50) {
+            insights.push(`With <strong>${v.dilution}%</strong> dilution, your ${v.equity}% is reduced to <strong>${dilutedEquity.toFixed(3)}%</strong>. Earlier stage = more future dilution.`);
+          }
+
+          // Exercise cost insight
+          if (exerciseCost > 50000) {
+            insights.push(`Your exercise cost is <strong>${this.formatCurrency(exerciseCost)}</strong>. That's cash you need to buy your shares.`);
+          }
+
+          // Cap insights at 3
+          document.getElementById('insight-1').innerHTML = insights[0] || '';
+          document.getElementById('insight-2').innerHTML = insights[1] || '';
+          document.getElementById('insight-3').innerHTML = insights[2] || '';
+        },
+
+        applyScenario: function(scenario) {
+          const s = this.scenarios[scenario];
+          if (!s) return;
+
+          // Update exit slider
+          if (this.sliders.exit && s.exit !== undefined) {
+            this.sliders.exit.value = s.exit;
+          }
+
+          // Highlight active button
+          document.querySelectorAll('.scenario-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.scenario === scenario);
+          });
+
+          this.update();
+        }
+      };
+
+      // Initialize explorer after charts are loaded
+      google.charts.setOnLoadCallback(() => {
+        Explorer.init();
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :exercise_window}
+    %h5{class: @presenter.term_title}
+      EXERCISE WINDOW
+    .js-termValue
+      = f.text_field(:exercise_window_years,
+                     {class: "#{@presenter.term_title_input_class} js-exerciseWindowYears tiny",
+                      data: {"model-attribute": :exercise_window_years}})
+      %span.u-colorGray1.u-fontWeight200
+        years
+      = f.text_field(:exercise_window_days,
+                    {class: "#{@presenter.term_title_input_class} js-exerciseWindowDays tiny",
+                      data: {"model-attribute": :exercise_window_days}})
+      %span.u-colorGray1.u-fontWeight200
+        days
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      You vest options, not stock. When you leave, you have
+      %span.js-exerciseWindowText.u-fontWeightBold.u-colorGray4
+        this long
+      to turn those options into stock. Exercising your options has risk. We
+      may still fail and your shares will be worth nothing.
+      You may not be able to sell those shares for many years after you leave.
+      You may pay a tax on perceived gains and your stock becomes worthless anyway.
+      If you cannot afford to exercise, you can lose all the stock you earn with a short exercise window and no net-exercise.

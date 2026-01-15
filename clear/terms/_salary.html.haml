@@ -1,0 +1,20 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :salary}
+    %div{class: @presenter.term_title}
+      SALARY
+    .js-termValue
+      %span.unit-left.u-colorGray1.u-fontWeight200
+        $
+      = f.text_field(:salary,
+                     {class: "#{@presenter.term_title_input_class} narrow js-salary left-unit-input",
+                     data: { "model-attribute": :salary}})
+      %span.u-colorGray1.u-fontWeight200
+        ,000
+
+  %div{class: @presenter.term_right }
+    %div{class: @presenter.description_style }
+      Gross annual salary. Paid via our standard company payment practices.
+
+    .u-hidden.js-salaryChartObserver
+    .js-salaryChart.s-vgTop1_5

@@ -1,0 +1,93 @@
+.s-grid-colMd24.s-vgBottom1
+  %table.g-table.list
+    %thead
+      %tr
+        %th
+          you could buy...
+        %th
+          with options worth...
+        %th
+          if we exit for...
+        %th
+          which is as rare as...
+    %tbody
+      %tr
+        -# special case of under the pref floor
+        %td
+          nothing 🤷
+        %td
+          nothing
+        %td
+          under
+          %span.js-preferenceFloorIncreaseOptionsInMoney
+        %td
+          most startups
+      .js-comparableExitObserver.u-hidden
+      - @presenter.comparable_exits.each do |exits|
+        %tr.js-comparableExit{data: {"approx-val": exits[:approx]}}
+          %td.js-canBuy
+          %td.js-withOptionsWorth
+          %td.js-approxVal
+          %td.js-comparableCompanies
+            = exits[:companies].map{ |company| link_to(company[:name], company[:url]) }.join(', ').html_safe
+.js-howMuchIsItWorthViz{data: {comparable_exits: @presenter.comparable_exits.to_json }}
+.s-grid-colMd24.u-colorGray7
+  Based on
+  %span.js-qtip{title: 'We estimate further dilution. We can estimate better if we know what series you are. E.g. seed, A, etc.' }
+    current equity
+  = f.text_field(:equity,
+                 {class: "narrow js-equityPercentHowMuch right-unit-input s-form--mini",
+                  data: { "model-attribute": :strike_price}})
+  %span.unit-right.compact
+    \%
+  ,
+  = f.label :latest_series, "series"
+  = f.select(:latest_series, [], {},
+             {class: "narrow js-latestSeriesHowMuch s-form--mini",
+              data: { 'model-attribute': :latest_series }})
+
+  = link_to "exercise cost", '#cost_to_exercise'
+  (strike price:
+  %span.unit-left.compact
+    $
+  = f.text_field(:how_much_strike_price,
+                 {class: "narrow js-strikePriceHowMuch left-unit-input s-form--mini",
+                  data: { "model-attribute": :strike_price}})
+  &times; # of options:
+  = f.text_field(:how_much_number_of_options,
+                 {class: "narrow js-numberOfOptionsHowMuch s-form--mini",
+                  data: { "model-attribute": :number_of_options}})
+  ) and
+  = link_to "preference floor:", "#preference_floor"
+  %span.unit-left.compact
+    $
+  = f.text_field(:how_much_preference_floor,
+                 {class: "standard js-preferenceFloorHowMuch left-unit-input s-form--mini",
+                 data: { "model-attribute": :preference_floor}})
+
+.s-grid-colMd24.u-colorGray7.js-ballparkPreferenceFloor.s-vgTop0_5
+  Without the
+  = link_to "preference floor", "#preference_floor"
+  we ballpark with:
+
+  = f.label :latest_valuation, "latest valuation"
+  %span.unit-left.compact
+    $
+  = f.text_field(:how_much_latest_valuation,
+                 {class: "standard js-latestValuationHowMuch left-unit-input s-form--mini",
+                  data: { "model-attribute": :latest_valuation}})
+  and
+  = link_to "liqpref", "http://www.feld.com/archives/2005/01/term-sheet-liquidation-preference.html", target: '_blank'
+  = f.text_field(:liquidation_preference,
+                 {class: "tiny js-liquidationPreferenceHowMuch right-unit-input s-form--mini",
+                  placeholder: 1,
+                  data: { "model-attribute": :liquidiation_preference}})
+  %span.unit-right
+    x
+  non-participating
+
+%div{class: "#{@presenter.description_style} s-grid-colMd24 s-vgTop0_5 u-colorGray7 js-ballparkPreferenceFloor"}
+  Based on
+  = link_to "average investor ownerships", 'https://www.quora.com/Venture-Capital-Funding-What-is-the-usual-percentage-of-shares-that-go-to-seed-Series-A-and-Series-B-rounds', target: '_blank'
+  and
+  = link_to "magnitude of price change each round.", 'https://www.fenwick.com/FenwickDocuments/Silicon-Valley-Venture-Capital-Survey-Second-Quarter-2016.pdf', target: '_blank'

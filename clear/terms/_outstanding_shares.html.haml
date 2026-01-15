@@ -1,0 +1,31 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :outstanding_shares}
+    %h5{class: @presenter.term_title}
+      OUTSTANDING SHARES
+    .js-termValue
+      = f.text_field(:outstanding_shares,
+                     {class: "#{@presenter.term_title_input_class} wide js-outstandingShares js-outstandingSharesObserver",
+                      data: {"model-attribute": :outstanding_shares}})
+      %span.u-colorGray1.u-fontWeight200
+        shares
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      The total number of shares when we wrote this. Companies usually pick a large
+      number. A large number enables fine-grained ownership. This total can change,
+      often from new funding.
+      %span.js-dilutionExplanation.js-NoNumbers.u-hidden
+        If a new investor wants to own 20%, we would give them new shares.
+        Your number of shares would not change. Your ownership percentage would decrease.
+      %span.js-dilutionExplanation.js-withNumbers.u-hidden
+        If a new investor wants to own 20%, we would give them
+        %span.js-newInvestorShares.u-fontWeightBold.u-colorGray4
+        new shares. You would then have
+        %span.js-numberOfOptionsText.u-fontWeightBold.u-colorGray4
+        out of&nbsp;
+        %span.js-newSharesOutstanding.u-fontWeightBold.u-colorGray4>
+        \. Your percent ownership would decrease from
+        %span.js-equityPercentText.u-fontWeightBold.u-colorGray4
+        to&nbsp;
+        %span.js-equityPercentPostDilution.u-fontWeightBold.u-colorGray4>
+        \.

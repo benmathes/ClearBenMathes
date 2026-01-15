@@ -1,0 +1,36 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :loading}
+    %h5{class: @presenter.term_title}
+      LOADING
+    .js-termValue
+      = f.select(:loading, [], {},
+                 {class: "#{@presenter.term_title_input_class} js-loading s-form--widthAuto",
+                  data: {"model-attribute": :loading}})
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      We
+      %span.js-loadingText
+        evenly-space
+      your vesting.
+      %span.js-loadingExplanation.js-noLoading
+        You will not be pushed to quit by the rate you vest.
+        We will not be pushed to fire you by the rate you vest.
+        Front-loaded or back-loaded vesting can incent you to quit or us to fire you unecessarily.
+      %span.js-loadingExplanation.js-backLoading.u-hidden
+        You vest slower at the start and faster at the end.
+        Back-loading is a
+        %span.helpful
+          loyalty bonus
+        if the overall grant is larger.
+        Back-loading
+        %span.harmful
+          can be extra-costly if you leave early
+        if the overall grant is the same.
+
+      %span.js-loadingExplanation.js-frontLoading.u-hidden
+        You vest faster at the start and slower at the end.
+        Front-loading can distort our decisions on if/when you leave.
+
+    .u-hidden.js-loadingChartObserver
+    .js-loadingChart.s-vgTop1_5

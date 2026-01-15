@@ -1,0 +1,15 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :benefits}
+    %h5{class: @presenter.term_title}
+      BENEFITS
+    .js-termValue
+      - [:health, :dental, :vision].each do |benefit|
+        .benefit
+          = f.check_box benefit,
+                    {class: "#{@presenter.term_title_input_class} js-#{benefit} s-form--widthAuto",
+                    data: { "model-attribute": benefit}}
+          = f.label benefit, benefit.to_s.titleize
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      You can participate in our company benefits program.

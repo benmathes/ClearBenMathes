@@ -1,0 +1,15 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :company_representation}
+    %h5{class: @presenter.term_title}
+      COMPANY REPRESENTATION
+    .js-termValue
+      = f.check_box :company_representation,
+                {class: "#{@presenter.term_title_input_class} js-companyRepresentation s-form--widthAuto",
+                data: { "model-attribute": :company_representation }}
+      = f.label :company_representation, "This offer is in accordance with the company."
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      Whether the company represents any legal documents downloaded
+      from this page are in accordance
+      with all applicable laws, company equity plans, and policies.

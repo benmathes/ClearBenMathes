@@ -1,0 +1,28 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %h5{class: @presenter.term_title}
+      STRIKE PRICE
+    .js-termValue
+      %span.u-colorGray1.u-fontWeight200.unit-left
+        $
+      = f.text_field(:strike_price,
+                     {class: "#{@presenter.term_title_input_class} left-unit-input js-strikePrice narrow",
+                      data: {"model-attribute": :strike_price}})
+      %span.u-colorGray1.u-fontWeight200
+        per share
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      You pay
+      %span.js-strikePriceText.u-fontWeightBold.u-colorGray4
+        this much
+      per share to turn your options into ownership (common stock).
+      %span.js-strikePriceExplanation.js-numbers.u-hidden
+        Your total cost would be&nbsp;
+        %span.js-costToExerciseText.u-fontWeightBold.u-colorGray4>
+        \.
+      We routinely assess how much common stock is worth. If common stock
+      goes up before you leave, you may pay some tax.
+      You might not be able to sell your stock even though you owe tax on it.
+      If we fail to beat the
+      = link_to "preference floor", "#preference_floor"
+      your stock will be worth nothing. It may be worth nothing even if you paid tax on it.

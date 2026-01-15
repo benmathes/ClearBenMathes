@@ -1,0 +1,31 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :vesting}
+    %h5{class: @presenter.term_title}
+      VESTING
+    .js-termValue
+      = f.text_field(:vesting_years,
+                     {class: "#{@presenter.term_title_input_class} tiny js-vestingYears",
+                      data: {"model-attribute": :vesting_years}})
+      %span.u-colorGray1.u-fontWeight200
+        years,
+      = f.text_field(:vesting_cliff_years,
+                     {class: "#{@presenter.term_title_input_class} tiny js-vestingCliffYears",
+                      data: {"model-attribute": :vesting_cliff_years}})
+      %span.u-colorGray1.u-fontWeight200
+        year cliff
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      You do not get any options when you start. You earn ("vest") them over time.
+      %span.js-vestingExplanation.js-noNumbers.u-hidden
+        You don't get anything until after your cliff.
+      %span.js-vestingExplanation.js-withNumbers.u-hidden
+        You vest your options over&nbsp;
+        %span.js-vestingYearsText.u-fontWeightBold.u-colorGray4>
+        \. You don't get anything until after&nbsp;
+        %span.js-vestingCliffYearsText.u-fontWeightBold.u-colorGray4>
+        \.
+      If you leave even one day before your cliff, you get none of your options.
+      You vest everything up to your cliff after your cliff.
+    .u-hidden.js-vestingChartObserver
+    .js-vestingChart

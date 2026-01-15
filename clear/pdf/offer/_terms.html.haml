@@ -1,0 +1,106 @@
+%div{class: @presenter.pdf_title_style}
+  Terms of the Offer
+
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Salary:
+    %span.js-salaryText
+  This is your gross annual salary, payable in accordance with the standard payroll practices of
+  the Company. Your salary, as well as all other forms of compensation referred to in this letter,
+  is subject to all withholdings and payroll taxes and other deductions as required by law.
+
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Number of Options:
+    %span.js-numberOfOptionsText
+  These options, which are granted to you pursuant to the Company's equity incentive plan, represent
+  the number of shares of Common Stock that you have the right (but not obligation) to purchase in
+  the future.  Unless and to the extent limited by applicable law, each of these options shall be an
+  Incentive Stock Option.  You do not and will not own any of these shares of Common Stock unless your
+  exercise your options.  Unless your options have an early-exercise feature (see below), you will not
+  be able to exercise options until the underlying shares have vested.  Later Equity Financings or Liquidity
+  Events may change this.  See "How You Get Your ownership" and "What happens when you leave" below.
+
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Vesting Period:
+    %span.js-vestingYearsText>
+    ,
+    %span.js-vestingCliffYearsText
+    cliff
+  You will not have any equity ownership or options when you start.  You will not own any shares of the Company
+  until you exercise your options, and the shares underlying your options are subject to a vesting schedule.
+  Unless your options have an early-exercise feature (see below), you will not be able to exercise your options
+  until the underlying shares have vested.
+  .js-noVestingCliff.u-hidden
+    These underlying shares will not start to vest until your start date.  Thereafter, the shares will vest monthly over the remainder of the vesting period.
+  .js-yesVestingCliff.u-hidden
+    These underlying shares will not start to vest until you reach the cliff.  If you quit just one day before the cliff, then all of the underlying share will remain unvested and you will forfeit the ability to exercise any of your options.  At the cliff, a percentage of your shares derived by dividing the period of the cliff by the entire vesting period will vest all at once.  Your remaining unvested shares will vest monthly thereafter over the remainder of the vesting period.
+
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Loading: None
+  We do not Front-Load or Back-Load your vesting.  After the cliff, the shares of the Company underlying your options will vest at the same rate at all times.  Back-Loading and Front-Loading distorts both the Company's and your decision on if or when you decide to leave.  For example, if 50% of the shares underlying your options vested in your last year, we would have a financial incentive to fire you before that last year, even if you were doing well.
+
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Early Exercise:
+    %span.js-earlyExerciseText
+  .js-earlyExerciseExplanation.js-yes.u-hidden
+    If you choose, you can exercise all of your options early when you join.  The equity you are entitled to still vests over time, just with a different mechanism.  You take on financial risk in exchange for more favorable tax treatment if the Company does well.  If the Company undergoes a Dissolution Event, or undergoes a Liquidity Event and is acquired for less than the preference floor (see below), the money you spent to exercise your options will be a total loss.
+  .js-earlyExerciseExplanation.js-no.u-hidden
+    You may not exercise your options early. Your options may be exercised only in accordance with your vesting schedule.
+
+// ADD_PAGE
+%div{class: @presenter.pdf_title_style}
+  Terms of the Offer (cont)
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Strike Price:
+    %span.js-strikePriceText
+    per share
+
+  This is how much you will pay to exercise each option to purchase shares of  Common Stock. Common stock carries voting
+  rights, but typically lacks the preferences and other special rights of preferred stock. Your strike price
+  is based on the Company's latest 409A valuation, which is how private companies determine the fair market value of their
+  common stock. If the Company's 409A valuation is higher when you leave than it is at the time of
+  this letter, you may need to pay taxes on that gain. Exercising your options involves certain risks.  Depending on
+  when you exercise your options, you may be subject to AMT on the gain recognized from the difference between your
+  strike price and the share price determined by the Company's then-current 409A valuation.  Further, the Company
+  may still later fail and your shares will be worth nothing.  Under U.S. securities laws, you are prohibited from
+  selling your shares until you have held them for one year.  Realistically, however, you may not be able to sell
+  those shares for many more years, until the Company is acquired or has an Initial Public Offering.  If the Company
+  slumps and you sell your shares at a loss, you will still owe taxes on the gain recognized on the exercise date.
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Exercise Window:
+    %span.js-exerciseWindowText
+    after termination of employment.
+
+  Your options will expire and may no longer be exercised following the exercise window.
+  To retain Incentive Stock Option status, the options must be exercised within 90 days from the termination of your
+  employment. If the options are not exercised within 90 days, they will automatically convert to Nonstatutory Stock Options
+  and will no longer qualify for any preferential tax treatment accorded Incentive Stock Options.
+  If you cannot afford to exercise the options and you do not Net Exercise (if allowed, see below), you will lose any ownership
+  you have earned in the Company.
+
+.s-vgTop2.s-vgBottom2
+  %div{class: @presenter.pdf_term_title}
+    Net exercise:
+    %span.js-netExerciseText
+  .js-netExerciseExplanation.js-no.u-hidden
+    The Company does not have a net exercise program with respect to your options.
+  .js-netExerciseExplanation.js-yes.u-hidden
+    During your exercise window you can sell back to the Company a portion of the options for which the underlying
+    shares have vested and use the resulting proceeds to exercise the remaining portion.  Your right to sell your
+    options back to the Company is known as "net exercise".  The value per share of the options sold to the Company
+    will be determined by the per share value according to the Company's latest 409A valuation minus your strike price.
+    A net exercise means you won't have to pay out of pocket to receive shares of Common Stock, but it also means you
+    will get fewer shares than you would if you used your own funds to exercise the options.

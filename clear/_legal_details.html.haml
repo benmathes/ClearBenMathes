@@ -1,0 +1,363 @@
+:ruby
+  section_title = "s-h3 s-grid-colSm24 js-sectionTitle"
+  section_title_subtext = "u-colorMuted s-vgBottom2 s-grid-colSm24 js-sectionTitleSubtext"
+  section_style_no_margin = "s-grid js-termSection"
+  section_style = "#{section_style_no_margin} s-vgBottom4"
+  term_style = "s-vgBottom2 js-clearTerm clearTerm"
+  term_title = 's-h5 js-termTitle'
+  term_value = 'js-termValue'
+  term_title_input_class = 'js-termInput'
+  description_style = "u-colorMuted termDescription js-termDescription"
+
+- assets do
+  .s-grid-colMd8.c-inset.u-bgGray.js-clear1.js-clearPreset
+    .u-textAlignCenter
+      %h5.s-h5
+        CLEAR:
+        %span.fontello-lock
+        10-year window
+      .u-colorMuted.u-fontWeight200
+        A long window means no lost ownership.
+      .c-button.c-button--gray.c-button--md.s-grid-break.s-vgTop1
+        use
+
+  .s-grid-colMd8.c-inset.u-bgGray.js-clear2.js-clearPreset
+    .u-textAlignCenter
+      %h5.s-h5
+        CLEAR:
+        %span.fontello-lock
+        90-day window, net-exercise
+      .u-colorMuted.u-fontWeight200
+        Short window, but a mechanism for owernship.
+      .c-button.c-button--gray.c-button--md.s-grid-break.s-vgTop1
+        use
+
+  .s-grid-colMd8.c-inset.u-bgGray.js-unclear.js-clearPreset
+    .u-textAlignCenter
+      %h5.s-h5
+        %span.fontello-attention-circled
+        Custom, Unvetted
+      .u-colorMuted.u-fontWeight200
+        look out for warnings
+      .c-button.c-button--gray.c-button--md.s-grid-break.s-vgTop1
+        use
+
+  .s-grid-colMd24.js-legalDetails.u-bgGray.c-inset.s-vgBottom5
+    %div{class: section_style, data: {sectionName: :shared_ownership}}
+      .s-grid-colMd12
+        %a{name: :number_of_options}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Number of Options
+          .js-termValue
+            = f.text_field(:number_of_options,
+                           {class: "#{term_title_input_class} narrow js-numberOfOptions js-numberOfOptionsObserver",
+                            data: { "model-attribute": :number_of_options}})
+            %span.u-colorGray1.u-fontWeight200
+              options
+          %div{class: description_style}
+            You will have the option to buy
+            %span.js-numberOfOptionsText
+              this many
+            shares of stock. You cannot buy them yet. You earn the right to buy them over time (see
+            = "#{link_to "vesting", "#vesting"})".html_safe
+            You do not own any stock unless you buy them.
+            Later funding rounds can change this. See
+            = link_to "how you get ownership", "#vesting"
+            and
+            = link_to "what happens when you leave", "#strike_price"
+
+        %a{name: :outstanding_shares}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Outstanding Shares
+          .js-termValue
+            = f.text_field(:outstanding_shares,
+                           {class: "#{term_title_input_class} wide js-outstandingShares js-outstandingSharesObserver",
+                            data: {"model-attribute": :outstanding_shares}})
+            %span.u-colorGray1.u-fontWeight200
+              shares
+          %div{class: description_style}
+            The total number of shares when we wrote this. Companies usually pick a large
+            number. A large number enables fine-grained ownership. This total can change,
+            often from new funding.
+            %span.js-dilutionExplanation.js-NoNumbers.u-hidden
+              If a new investor wants to own 20%, we would give them new shares.
+              Your number of shares would not change. Your ownership percentage would decrease.
+            %span.js-dilutionExplanation.js-withNumbers.u-hidden
+              If a new investor wants to own 20%, we would give them
+              %span.js-newInvestorShares
+              new shares. You would then have
+              %span.js-numberOfOptionsText
+              out of&nbsp;
+              %span.js-newSharesOutstanding>
+              \. Your percent ownership would decrease from
+              %span.js-equityPercentText
+              to&nbsp;
+              %span.js-equityPercentPostDilution>
+              \.
+
+
+      .s-grid-colMd12
+        %a{name: :latest_valuation_per_share}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Latest Valuation
+          .js-termValue
+            %span.unit-left.u-colorGray1.u-fontWeight200
+              $
+            = f.text_field(:latest_valuation_per_share,
+                           { class: "#{term_title_input_class} left-unit-input narrow js-latestValuationPerShare",
+                             data: {"model-attribute": :latest_valuation_per_share}})
+            %span.u-colorGray1.u-fontWeight200
+              per preferred share
+          %div{class: description_style}
+            Investors usually buy preferred stock. The latest investors thought their shares were each worth&nbsp;
+            %span.js-latestValuationPerShareText>
+              this much
+            \. Preferred stock gets preferential terms
+            that usually makes it worth more than common stock. You get common stock.
+
+        %a{name: :latest_valuation}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Latest Company Valuation
+          .js-termValue
+            %span.js-companyValuationText
+            %span.u-colorGray1.u-fontWeight200
+              (approximate, current)
+          %div{class: description_style}
+            This is the latest preferred value per share times the number of shares.
+            This is what you usually read in the press. This is the value of the company
+            to you only if you own preferred stock. You get common stock.
+
+
+    %div{class: section_style}
+      %h4{class: section_title}
+        How You Get Ownership
+      %div{class: section_title_subtext}
+        How long and how fast it takes for you to get your ownership.
+      .s-grid-colMd12
+        %a{name: :vesting}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Vesting
+          .js-termValue
+            = f.text_field(:vesting_years,
+                           {class: "#{term_title_input_class} tiny js-vestingYears",
+                            data: {"model-attribute": :vesting_years}})
+            %span.u-colorGray1.u-fontWeight200
+              years,
+            = f.text_field(:vesting_cliff_years,
+                           {class: "#{term_title_input_class} tiny js-vestingCliffYears",
+                            data: {"model-attribute": :vesting_cliff_years}})
+            %span.u-colorGray1.u-fontWeight200
+              year cliff
+          %div{class: description_style}
+            You do not get any options when you start. You earn ("vest") them over time.
+            %span.js-vestingExplanation.js-noNumbers.u-hidden
+              You don't get anything until after your cliff.
+            %span.js-vestingExplanation.js-withNumbers.u-hidden
+              You vest your options over&nbsp;
+              %span.js-vestingYearsText>
+              \. You don't get anything until after&nbsp;
+              %span.js-vestingCliffYearsText>
+              \.
+            If you leave even one day before your cliff, you get none of your options.
+            You vest everything up to your cliff after your cliff.
+
+        .u-hidden.js-vestingChartObserver
+        .js-vestingChart
+      .s-grid-colMd12
+
+        %a{name: :early_exercise}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Early Exercise
+          .js-termValue
+            = f.select(:early_exercise, ["no", "yes"], {},
+                       {class: "#{term_title_input_class} js-earlyExercise s-form--widthAuto",
+                        data: {"model-attribute": :early_exercise}})
+          %div{class: description_style}
+            %span.js-earlyExerciseExplanation.js-yes.u-hidden
+              If you want, you can buy your options when you join. It costs
+              %span.js-costToExerciseText
+              to early exercise.
+              You still vest over time, but with a different mechanism. We
+              can buy back your shares. We lose that right over time at
+              the same rate you would have vested.
+              %br
+              %br
+              Why do it? Taxes. You would start the clock on long-term capital
+              gains now, not when you leave. There is still risk that your equity may be
+              worth nothing.
+            %span.js-earlyExerciseExplanation.js-no.u-hidden
+              You cannot early exercise. You can only exercise as you vest. You may miss
+              out on tax savings.
+
+        %a{name: :loading}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Loading
+          .js-termValue
+            = f.select(:loading, [], {},
+                       {class: "#{term_title_input_class} js-loading s-form--widthAuto",
+                        data: {"model-attribute": :loading}})
+          %div{class: description_style}
+            We
+            %span.js-loadingText
+              evenly-space
+            your vesting.
+            %span.js-loadingExplanation.js-noLoading
+              You will not be pushed to quit by the rate you vest.
+              We will not be pushed to fire you by the rate you vest.
+            %span.js-loadingExplanation.js-backLoading.u-hidden
+              You vest slower at the start and faster at the end.
+              Back-loading can distort our decision on if/when you leave.
+              It also distorts your decision on when to leave.
+              For example, if you vest half of your grant in your last year we
+              would be pushed to fire you before that last year.
+            %span.js-loadingExplanation.js-frontLoading.u-hidden
+              You vest faster at the start and slower at the end.
+              Front-loading can distort our decision on if/when you leave.
+              It also distorts your decision on when to leave.
+              If you vest half of your grant in your first year you
+              would have a bigger reason to quit after.
+
+
+
+    %div{class: section_style_no_margin}
+      %h4{class: section_title}
+        Taking Ownership
+      %div{class: section_title_subtext}
+        The mechanics of turning your options into ownership.
+      .s-grid-colMd12
+        %a{name: :strike_price}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Strike Price
+          .js-termValue
+            %span.u-colorGray1.u-fontWeight200.unit-left
+              $
+            = f.text_field(:strike_price,
+                           {class: "#{term_title_input_class} left-unit-input js-strikePrice narrow",
+                            data: {"model-attribute": :strike_price}})
+            %span.u-colorGray1.u-fontWeight200
+              per share
+          %div{class: description_style}
+            You pay
+            %span.js-strikePriceText
+              this much
+            per share to turn your options into ownership (common stock).
+            %span.js-strikePriceExplanation.js-numbers.u-hidden
+              Your total cost would be&nbsp;
+              %span.js-costToExerciseText>
+
+              \.
+            We routinely assess how much common stock is worth. If common stock
+            goes up before you leave, you may pay some tax.
+            You might not be able to sell your stock even though you owe tax on it.
+            If we fail to beat the
+            = link_to "preference floor", "#preference_floor"
+            your stock will be worth nothing. It may be worth nothing even if you paid tax on it.
+
+        %a{name: :exercise_window}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Exercise Window
+          .js-termValue
+            = f.text_field(:exercise_window_years,
+                           {class: "#{term_title_input_class} js-exerciseWindowYears tiny",
+                            data: {"model-attribute": :exercise_window_years}})
+            %span.u-colorGray1.u-fontWeight200
+              years
+            = f.text_field(:exercise_window_days,
+                          {class: "#{term_title_input_class} js-exerciseWindowDays tiny",
+                            data: {"model-attribute": :exercise_window_days}})
+            %span.u-colorGray1.u-fontWeight200
+              days
+          %div{class: description_style}
+            You vest options, not stock. When you leave, you have
+            %span.js-exerciseWindowText
+              this long
+            to turn those options into stock. Exercising your options has risk. We
+            may still fail and your shares will be worth nothing.
+            You may not be able to sell those shares for many years after you leave.
+            You may pay a tax on perceived gains and your stock becomes worthless anyway.
+
+        %a{name: :cost_to_exercise}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Cost to Exercise
+          .js-termValue
+            %span.u-colorGray1.u-fontWeight200.js-costToExerciseText
+          %div{class: description_style}
+            This is your number of options times your strike price.
+            %div.js-costToExerciseEquation.u-hidden
+              %span.js-strikePriceText
+              \*
+              %span.js-numberOfOptionsText
+              \=
+              %span.js-costToExerciseText
+            You have to pay this to convert all your options into common stock.
+      .s-grid-colMd12
+        %a{name: :net_exercise}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Net Exercise
+          .js-termValue
+            = f.select(:net_exercise,
+                       options_for_select(["no", "yes"]), {},
+                       {class: "#{term_title_input_class} js-netExercise s-form--widthAuto",
+                       data: {"model-attribute": :net_exercise}})
+          %div{class: description_style}
+            %span.js-netExerciseExplanation.js-no.u-hidden
+              It costs
+              %span.js-costToExerciseText
+              to exercise your options. If you can't afford that during your exercise window,
+              you lose all the ownership you will have vested.
+            %span.js-netExerciseExplanation.js-yes.u-hidden
+              If common stock is worth more when you leave than when you joined you can sell some of your
+              options back to us. You can take the proceeds and and buy the rest. A net-exercise is
+              often worse than exercising if you can afford it.
+              But a net-exercise is usually better than losing all your equity.
+
+        %a{name: :preference_floor}
+        %div{class: term_style}
+          %h5{class: term_title}
+            Preference Floor
+          .js-termValue
+            %span.unit-left.u-colorGray1.u-fontWeight200
+              $
+            = f.text_field(:preference_floor,
+                           {class: "#{term_title_input_class} left-unit-input wide js-preferenceFloor",
+                            data: {"model-attribute": :preference_floor}})
+            %span.u-colorGray1.u-fontWeight200
+              (approximate, current)
+          %div{class: description_style}
+            %span.js-preferenceFloorExplanation.js-noNumbers.u-hidden
+              We need to exit for more than this floor for common stock to be worth anything.
+            %span.js-preferenceFloorExplanation.js-aboveLatestValuation.u-hidden
+              We must be worth more than
+              %span.js-preferenceFloorText
+              for common stock to be worth anything. That is an increase of&nbsp;
+              %span.js-preferenceFloorIncrease>
+              \. Your options cost money to exercise. We need to be worth even more than
+              the floor for your options to be worth anything.
+
+            %span.js-preferenceFloorExplanation.js-aboveExerciseCost.u-hidden
+              %br
+              %br
+              Exercising your options cost money (see
+              = link_to "if you leave", "#strike_price"
+              ) so we must be worth&nbsp;
+              %span.js-preferenceFloorIncreaseOptionsInMoney>
+              \, which is an increase of&nbsp;
+              %span.js-preferenceFloorIncreaseOptionsInMoneyPercent>
+              \.
+            Your options let you buy common stock. Investors usually buy preferred stock.
+            Preferred is usually paid back in full (or more) before common gets anything.
+            Any further funding will likely raise this floor.
+
+        .u-hidden.js-optionsInMoneyChartObserver
+        .js-optionsInMoneyChart.s-vgTop1_5

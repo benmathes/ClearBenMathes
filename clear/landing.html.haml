@@ -1,0 +1,120 @@
+:ruby
+  set_layout_size @presenter.layout_size
+  set_layout_scheme @presenter.layout_scheme
+  content_for :title, @presenter.title(:landing)
+
+
+- content_for :single_column_prefix do
+  .s-vgPadTop4.s-vgPadBottom4.u-textAlignCenter.u-bgGray.s-vgBottom4
+    %h1.u-fontSize55.u-fontWeight100
+      CLEAR Employee Equity
+    .u-fontSize24.u-fontWeight200.u-colorGray8.s-vgTop1_5
+      Simple and fair terms for companies and employees
+
+
+- assets do
+  .s-grid
+    .s-grid-colMd16.s-grid--preMd4.u-fontSize16.s-vgBottom5
+      :markdown
+        A **CLEAR** (Clear Letter of Equity and Remuneration) is a fair offer letter,
+        amendment, or online tool that helps founders and employees make sense of their equity.
+        A **CLEAR** offer/amendment is fair to both employees and companies.
+        You want to build a company, not a bunch of complicated legal documents.
+
+    .s-grid-colMd10.s-grid--preMd2
+      .c-inset.u-bgGray
+        %h3.s-h4.s-vgBottom1
+          %span.fontello-briefcase
+          For Founders
+        %ul.u-colorGray8
+          %li.s-liBullet.s-vgBottom0_5 You are fair with employee equity, now get credit for it.
+          %li.s-liBullet.s-vgBottom0_5 Save time teaching with simple and fair job offers
+          %li.s-liBullet.s-vgBottom0_5 Amend employee grants to protect them from surprises
+
+        = link_to '/clear/offer' do
+          .c-button.c-button--blue.s-vgTop1
+            Make a CLEAR Offer
+
+    .s-grid-colMd10
+      .c-inset.u-bgGray
+        %h3.s-h4.s-vgBottom1
+          %span.fontello-group
+          For Employees
+        %ul.u-colorGray8
+          %li.s-liBullet.s-vgBottom0_5 Know if your equity terms are fair
+          %li.s-liBullet.s-vgBottom0_5 Understand the tax implications of your equity
+          %li.s-liBullet.s-vgBottom0_5 Be informed and empowered to understand your ownership
+
+        = link_to '/clear/offer' do
+          .c-button.c-button--gray.s-vgTop1
+            Explore Your Equity
+
+
+    .s-grid-colMd16.s-grid--preMd4.u-fontSize14.s-vgTop4
+      %h3.s-h4.s-vgBottom1
+        Why should I use this?
+      .u-colorGray8
+        :markdown
+          Complicated equity and tax law can painfully surprise you. Employees worry if their equity is fair.
+          Founders waste time explaining it to candidates. Many top people (like #{link_to "Sam Altman", "/sama"} of #{link_to "YC", "/y-combinator"})
+          say #{link_to "employees often don't get treated well", "http://blog.samaltman.com/employee-equity"}.
+
+          **CLEAR** is the transparent way to handle employee equity.
+          Founders can make offers and amendments. Employees can make amendments, get offers, and evaluate their equity.
+          To make **CLEAR** simple to use, we built a free tool. We think **CLEAR** docs are fair to both employees and companies.
+          Questions/suggestions? #{link_to 'contact us', 'mailto:talent@angel.co?subject=Question about CLEAR offers/amendments'}.
+
+      %h3.s-h4.s-vgBottom1.s-vgTop2
+        %span.fontello-ok.u-colorGray8
+        Private — No sign-up or log-in required
+      .u-colorGray8
+        AngelList doesn't save or track any of the offer terms.
+        Angelist encodes the offer in the shareable URL. We don't
+        track who you are.
+      %h3.s-h4.s-vgBottom1.s-vgTop2
+        %span.fontello-ok.u-colorGray8
+        No front-loading or back-loading
+      .u-colorGray8
+        Employees will not be incented to quit by early vesting. Companies will not be incented to fire
+        employees by late vesting.
+      %h3.s-h4.s-vgBottom1.s-vgTop2
+        %span.fontello-ok.u-colorGray8
+        Early exercise
+      .u-colorGray8
+        Employees exercise their options when they join, with an alternate vesting
+        mechanism. Companies can buy back shares at the original price, but lose that right over time at
+        the same rate you would have vested. This can save a lot of tax, and is less risky
+        early on with a low strike price.
+      %h3.s-h4.s-vgBottom1.s-vgTop2
+        %span.fontello-ok.u-colorGray8
+        Fair option exercise
+      .u-colorGray8
+        90-day exercise windows often leave employees stuck with a large bill
+        or they lose their equity. **CLEAR** docs offer two ways for a company to address this:
+      %h3.s-h4.s-vgTop1.s-vgBottom0_5
+        Net-exercise:
+      .u-colorGray8
+        If common stock is worth more when an employee leaves than when they joined they can sell some of their
+        options back to the company. They then take the proceeds and buy the rest. A net-exercise is
+        often worse than exercising if the employee can easily afford it. But a net-exercise is usually better than losing all your equity.
+      %h3.s-h4.s-vgTop1.s-vgBottom0_5
+        10-year window:
+      .u-colorGray8
+        10-years is the maximum length allowed by law. This should cover most painful situations for the employee.
+        If the company goes public, gets acquired, or dies in that time frame,
+        either the employee will have the liquidity to exercise or it won’t matter.
+
+      %h3.s-h4.s-vgBottom1.s-vgTop3
+        Why did AngelList make this?
+      .u-colorGray8
+        :markdown
+          AngelList can't succeed unless the ecosystem succeeds. We want companies and employees
+          figuring out how to build their next great product or close their next great deal. We don't want you
+          worrying about arcane startup securities. We want you to build your business. The **CLEAR**
+          docs and tools clear your path to focus on what matters.
+
+      .s-vgTop3.u-colorGray8.u-fontSize14
+        More questions?
+        = link_to 'Frequently Asked Questions »', '/help/clear', target: '_blank'
+        %br
+        Ideas, or issues? #{link_to 'email us', 'mailto:talent@angel.co?subject=Question about CLEAR offers/amendments'}.

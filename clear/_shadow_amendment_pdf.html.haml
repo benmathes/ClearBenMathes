@@ -1,0 +1,10 @@
+.shadowPDF.js-shadowPDF.u-hidden
+  - # note: brittle ADD_PAGE html comments. jsPDF uses that
+  - # to insert a page break.
+  = render partial: '/clear/pdf/amendment/cover'
+  / ADD_PAGE
+  = render partial: '/clear/pdf/amendment/terms'
+  / ADD_PAGE
+  = render partial: 'clear/pdf/amendment/signatures'
+  / ADD_PAGE
+  = render partial: 'clear/pdf/legal_definitions'

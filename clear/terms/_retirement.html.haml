@@ -1,0 +1,16 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :retirement}
+    %h5{class: @presenter.term_title}
+      RETIREMENT
+    .js-termValue
+      = f.select(:retirement,
+                 options_for_select(["no", "yes"]), {},
+                 {class: "#{@presenter.term_title_input_class} js-retirement s-form--widthAuto",
+                  data: { "model-attribute": :retirement}})
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      %span.u-hidden.js-retire.yes
+        You can join our retirement plan.
+      %span.u-hidden.js-retire.no
+        We have no employer retirement plan.

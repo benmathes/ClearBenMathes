@@ -1,0 +1,30 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :equity}
+    %h5{class: @presenter.term_title}
+      EQUITY
+    .js-termValue
+      = f.text_field(:equity_ercent,
+                     { class: "#{@presenter.term_title_input_class} right-unit-input narrow js-equityPercent js-equityPercentObserver",
+                       data: {"model-attribute": :equity_percent}})
+      %span.u-colorGray1.u-fontWeight200
+        %span.unit-right
+          \%
+        (approximate, current)
+
+
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      This is nothing more than your number of options divided by total shares.
+      Later funding will probably increase the number of outstanding shares.
+      The dollar value of your options may go up if the value of the company goes
+      up, even if your percentage ownership declines. 0.1% of 100M is more than 0.9% of 10M.
+    .js-salaryChartLinks.u-colorGray8
+      = link_to "salaries/equities", '/salaries', target: '_blank'
+      from
+      = link_to "active jobs on angellist", '/jobs', target: '_blank'
+      %br
+      Generally junior roles. Some can negotiate higher pay.
+
+    .u-hidden.js-equityChartObserver
+    .js-equityChart.s-vgTop1_5

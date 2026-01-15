@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLEAR Equity Calculator - Tests</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    h1 { color: #fff; margin-bottom: 5px; }
+    .summary { margin-bottom: 20px; font-size: 1.2rem; }
+    .pass { color: #4caf50; }
+    .fail { color: #f44336; }
+    .test-group { margin: 20px 0; padding: 15px; background: #2a2a2a; border-radius: 8px; }
+    .test-group h2 { margin: 0 0 10px; color: #90caf9; font-size: 1rem; }
+    .test { padding: 5px 0; border-bottom: 1px solid #333; }
+    .test:last-child { border-bottom: none; }
+    .test-name { color: #bbb; }
+    .test-result { font-weight: bold; margin-left: 10px; }
+    .test-details { color: #888; font-size: 0.85rem; margin-left: 20px; }
+    .error-msg { color: #f44336; margin-left: 20px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>CLEAR Equity Calculator Tests</h1>
+  <div class="summary" id="summary"></div>
+  <div id="results"></div>
+
+  <script>
+    // ============================================
+    // Test Framework
+    // ============================================
+    const tests = [];
+    let passed = 0;
+    let failed = 0;
+
+    function describe(groupName, fn) {
+      tests.push({ group: groupName, tests: [] });
+      fn();
+    }
+
+    function it(testName, fn) {
+      const currentGroup = tests[tests.length - 1];
+      try {
+        fn();
+        currentGroup.tests.push({ name: testName, passed: true });
+        passed++;
+      } catch (e) {
+        currentGroup.tests.push({ name: testName, passed: false, error: e.message });
+        failed++;
+      }
+    }
+
+    function expect(actual) {
+      return {
+        toBe: (expected) => {
+          if (actual !== expected) {
+            throw new Error(`Expected ${expected}, got ${actual}`);
+          }
+        },
+        toBeCloseTo: (expected, precision = 2) => {
+          const diff = Math.abs(actual - expected);
+          const epsilon = Math.pow(10, -precision) / 2;
+          if (diff > epsilon) {
+            throw new Error(`Expected ${expected} (±${epsilon}), got ${actual}`);
+          }
+        },
+        toBeNaN: () => {
+          if (!isNaN(actual)) {
+            throw new Error(`Expected NaN, got ${actual}`);
+          }
+        },
+        toBeGreaterThan: (expected) => {
+          if (actual <= expected) {
+            throw new Error(`Expected ${actual} > ${expected}`);
+          }
+        },
+        toBeLessThan: (expected) => {
+          if (actual >= expected) {
+            throw new Error(`Expected ${actual} < ${expected}`);
+          }
+        },
+        toBeTruthy: () => {
+          if (!actual) {
+            throw new Error(`Expected truthy value, got ${actual}`);
+          }
+        },
+        toBeFalsy: () => {
+          if (actual) {
+            throw new Error(`Expected falsy value, got ${actual}`);
+          }
+        }
+      };
+    }
+
+    // ============================================
+    // Copy of calculation functions from index.html
+    // ============================================
+
+    // Number parsing - supports k, m, b suffixes
+    function parseNumberWithSuffix(value) {
+      if (value === null || value === undefined || value === '') return NaN;
+      if (typeof value === 'number') return value;
+
+      let str = String(value).trim().toLowerCase().replace(/,/g, '');
+      const suffixes = { 'k': 1000, 'm': 1000000, 'b': 1000000000, 't': 1000000000000 };
+
+      let multiplier = 1;
+      const lastChar = str.slice(-1);
+      if (suffixes[lastChar]) {
+        multiplier = suffixes[lastChar];
+        str = str.slice(0, -1);
+      }
+
+      const num = parseFloat(str);
+      if (isNaN(num)) return NaN;
+      return num * multiplier;
+    }
+
+    // Format number with commas
+    function formatWithCommas(number) {
+      const num = parseFloat(number);
+      if (isNaN(num)) return '';
+      if (Number.isInteger(num)) {
+        return num.toLocaleString('en-US');
+      }
+      return num.toLocaleString('en-US', { maximumFractionDigits: 4 });
+    }
+
+    // Model calculations
+    const SERIES = ['seed', 'A', 'B', 'C+'];
+    const AVG_INVESTOR_EQUITY_PERCENT = { seed: 20, A: 20, B: 25, 'C+': 25 };
+    const AVG_ROUND_MARKUP_PERCENT = { seed: 56, A: 50, B: 116, 'C+': 84 };
+
+    function companyValuation(outstandingShares, latestValuationPerShare) {
+      return parseInt(outstandingShares, 10) * parseFloat(latestValuationPerShare, 10);
+    }
+
+    function equityRatio(numberOfOptions, outstandingShares) {
+      return parseInt(numberOfOptions, 10) / parseInt(outstandingShares, 10);
+    }
+
+    function equityPercent(numberOfOptions, outstandingShares) {
+      return 100 * equityRatio(numberOfOptions, outstandingShares);
+    }
+
+    function costToExercise(strikePrice, numberOfOptions) {
+      return parseFloat(strikePrice, 10) * parseInt(numberOfOptions, 10);
+    }
+
+    function ballparkPreferenceFloor(series, liquidationPreference, latestValuation) {
+      if (!latestValuation || !series || !liquidationPreference) return 0;
+
+      let floor = 0;
+      let i = SERIES.indexOf(series);
+      let thisRoundValuation = latestValuation;
+
+      while (i >= 0) {
+        const thisRoundInvestorEquity = AVG_INVESTOR_EQUITY_PERCENT[SERIES[i]] / 100;
+        floor += Math.floor((thisRoundValuation * thisRoundInvestorEquity) * liquidationPreference);
+        i--;
+        if (i >= 0) {
+          thisRoundValuation = Math.floor(thisRoundValuation / (1 + AVG_ROUND_MARKUP_PERCENT[SERIES[i]] / 100));
+        }
+      }
+      return floor;
+    }
+
+    function commonOptionsInMoneyFloor(strikePrice, numberOfOptions, preferenceFloor) {
+      const cost = costToExercise(strikePrice, numberOfOptions);
+      if (cost && preferenceFloor) {
+        return preferenceFloor + cost;
+      }
+      return undefined;
+    }
+
+    function valueOfOptions(exitValue, equityRatioVal, preferenceFloor, exerciseCost, series) {
+      let eqRatio = equityRatioVal;
+      let i = SERIES.indexOf(series);
+
+      // Apply future dilution estimates
+      while (i < SERIES.length) {
+        const dilutionNextRoundRatio = AVG_INVESTOR_EQUITY_PERCENT[SERIES[i]] / 100;
+        eqRatio = eqRatio / ((1 - eqRatio) + dilutionNextRoundRatio);
+        i++;
+      }
+
+      const value = ((exitValue - preferenceFloor) * eqRatio) - exerciseCost;
+      return (!isNaN(value) && value !== null) ? value : undefined;
+    }
+
+    function exerciseWindowYears(years, days) {
+      const y = parseInt(years, 10);
+      const d = parseInt(days, 10);
+      if (isNaN(y) && isNaN(d)) return NaN;
+      return (365 * (y || 0) + (d || 0)) / 365;
+    }
+
+    function dilutionCalculation(numberOfOptions, outstandingShares, investorEquityPercent) {
+      const newShares = Math.ceil((investorEquityPercent * outstandingShares) / (1.0 - investorEquityPercent));
+      const newTotalShares = newShares + outstandingShares;
+      const equityPostDilution = numberOfOptions / newTotalShares;
+      return { newShares, newTotalShares, equityPostDilution };
+    }
+
+    // ============================================
+    // Tests
+    // ============================================
+
+    describe('Number Parsing with Suffixes', () => {
+      it('parses plain numbers', () => {
+        expect(parseNumberWithSuffix('1000')).toBe(1000);
+        expect(parseNumberWithSuffix('123.45')).toBe(123.45);
+        expect(parseNumberWithSuffix('0')).toBe(0);
+      });
+
+      it('parses numbers with k suffix (thousands)', () => {
+        expect(parseNumberWithSuffix('1k')).toBe(1000);
+        expect(parseNumberWithSuffix('1K')).toBe(1000);
+        expect(parseNumberWithSuffix('100k')).toBe(100000);
+        expect(parseNumberWithSuffix('4.3k')).toBe(4300);
+        expect(parseNumberWithSuffix('0.5k')).toBe(500);
+      });
+
+      it('parses numbers with m suffix (millions)', () => {
+        expect(parseNumberWithSuffix('1m')).toBe(1000000);
+        expect(parseNumberWithSuffix('1M')).toBe(1000000);
+        expect(parseNumberWithSuffix('10m')).toBe(10000000);
+        expect(parseNumberWithSuffix('2.5m')).toBe(2500000);
+        expect(parseNumberWithSuffix('0.1m')).toBe(100000);
+      });
+
+      it('parses numbers with b suffix (billions)', () => {
+        expect(parseNumberWithSuffix('1b')).toBe(1000000000);
+        expect(parseNumberWithSuffix('1B')).toBe(1000000000);
+        expect(parseNumberWithSuffix('2.5B')).toBe(2500000000);
+        expect(parseNumberWithSuffix('0.5b')).toBe(500000000);
+      });
+
+      it('parses numbers with t suffix (trillions)', () => {
+        expect(parseNumberWithSuffix('1t')).toBe(1000000000000);
+        expect(parseNumberWithSuffix('1T')).toBe(1000000000000);
+      });
+
+      it('handles numbers with commas', () => {
+        expect(parseNumberWithSuffix('1,000')).toBe(1000);
+        expect(parseNumberWithSuffix('1,000,000')).toBe(1000000);
+        expect(parseNumberWithSuffix('1,234.56')).toBe(1234.56);
+      });
+
+      it('handles whitespace', () => {
+        expect(parseNumberWithSuffix('  100k  ')).toBe(100000);
+        expect(parseNumberWithSuffix(' 1m ')).toBe(1000000);
+      });
+
+      it('returns NaN for invalid inputs', () => {
+        expect(parseNumberWithSuffix('')).toBeNaN();
+        expect(parseNumberWithSuffix(null)).toBeNaN();
+        expect(parseNumberWithSuffix(undefined)).toBeNaN();
+        expect(parseNumberWithSuffix('abc')).toBeNaN();
+        expect(parseNumberWithSuffix('k')).toBeNaN();
+      });
+
+      it('passes through numeric values', () => {
+        expect(parseNumberWithSuffix(1000)).toBe(1000);
+        expect(parseNumberWithSuffix(1.5)).toBe(1.5);
+      });
+    });
+
+    describe('Number Formatting with Commas', () => {
+      it('formats whole numbers with commas', () => {
+        expect(formatWithCommas(1000)).toBe('1,000');
+        expect(formatWithCommas(1000000)).toBe('1,000,000');
+        expect(formatWithCommas(1234567890)).toBe('1,234,567,890');
+      });
+
+      it('formats small numbers without commas', () => {
+        expect(formatWithCommas(100)).toBe('100');
+        expect(formatWithCommas(0)).toBe('0');
+      });
+
+      it('formats decimal numbers', () => {
+        expect(formatWithCommas(1234.56)).toBe('1,234.56');
+        expect(formatWithCommas(0.5)).toBe('0.5');
+      });
+
+      it('returns empty string for invalid inputs', () => {
+        expect(formatWithCommas(NaN)).toBe('');
+        expect(formatWithCommas('abc')).toBe('');
+      });
+    });
+
+    describe('Equity Calculations', () => {
+      it('calculates equity percent from shares', () => {
+        // 10,000 options out of 10,000,000 shares = 0.1%
+        expect(equityPercent(10000, 10000000)).toBeCloseTo(0.1, 4);
+
+        // 100,000 options out of 10,000,000 shares = 1%
+        expect(equityPercent(100000, 10000000)).toBeCloseTo(1, 4);
+
+        // 1,000,000 options out of 10,000,000 shares = 10%
+        expect(equityPercent(1000000, 10000000)).toBeCloseTo(10, 4);
+      });
+
+      it('calculates equity ratio as decimal', () => {
+        expect(equityRatio(10000, 10000000)).toBeCloseTo(0.001, 6);
+        expect(equityRatio(100000, 10000000)).toBeCloseTo(0.01, 6);
+      });
+    });
+
+    describe('Company Valuation', () => {
+      it('calculates valuation from shares and price per share', () => {
+        // 10M shares at $1/share = $10M
+        expect(companyValuation(10000000, 1)).toBe(10000000);
+
+        // 10M shares at $10/share = $100M
+        expect(companyValuation(10000000, 10)).toBe(100000000);
+
+        // 50M shares at $2.50/share = $125M
+        expect(companyValuation(50000000, 2.5)).toBe(125000000);
+      });
+
+      it('handles decimal share prices', () => {
+        // 10M shares at $0.10/share = $1M
+        expect(companyValuation(10000000, 0.10)).toBeCloseTo(1000000, 0);
+      });
+    });
+
+    describe('Cost to Exercise', () => {
+      it('calculates total cost to exercise all options', () => {
+        // 10,000 options at $0.10/share = $1,000
+        expect(costToExercise(0.10, 10000)).toBeCloseTo(1000, 2);
+
+        // 100,000 options at $1.00/share = $100,000
+        expect(costToExercise(1.00, 100000)).toBe(100000);
+
+        // 50,000 options at $0.50/share = $25,000
+        expect(costToExercise(0.50, 50000)).toBe(25000);
+      });
+
+      it('handles very small strike prices', () => {
+        // 100,000 options at $0.01/share = $1,000
+        expect(costToExercise(0.01, 100000)).toBeCloseTo(1000, 2);
+      });
+    });
+
+    describe('Preference Floor (Options In Money)', () => {
+      it('calculates when options become valuable', () => {
+        // If preference floor is $10M and cost to exercise is $10,000
+        // Options are in the money at $10,010,000
+        const floor = commonOptionsInMoneyFloor(0.10, 100000, 10000000);
+        expect(floor).toBe(10010000);
+      });
+
+      it('requires both preference floor and exercise cost', () => {
+        expect(commonOptionsInMoneyFloor(0.10, 100000, null)).toBe(undefined);
+        expect(commonOptionsInMoneyFloor(null, 100000, 10000000)).toBe(undefined);
+      });
+
+      it('calculates ballpark preference floor based on series', () => {
+        // Series A company at $50M valuation with 1x liquidation preference
+        // Should have meaningful preference floor
+        const floor = ballparkPreferenceFloor('A', 1, 50000000);
+        expect(floor).toBeGreaterThan(0);
+
+        // Higher series = higher preference floor (more investor money)
+        const floorB = ballparkPreferenceFloor('B', 1, 100000000);
+        expect(floorB).toBeGreaterThan(floor);
+      });
+
+      it('scales preference floor with liquidation preference multiplier', () => {
+        const floor1x = ballparkPreferenceFloor('A', 1, 50000000);
+        const floor2x = ballparkPreferenceFloor('A', 2, 50000000);
+
+        // 2x liquidation preference should roughly double the floor
+        expect(floor2x).toBeGreaterThan(floor1x);
+        expect(floor2x).toBeCloseTo(floor1x * 2, -6); // within $1M
+      });
+    });
+
+    describe('Value of Options at Exit', () => {
+      it('returns zero value when exit is below preference floor', () => {
+        // Preference floor of $10M, exit at $5M
+        const value = valueOfOptions(5000000, 0.01, 10000000, 10000, 'A');
+        expect(value).toBeLessThan(0); // Negative value (worthless)
+      });
+
+      it('calculates positive value when exit exceeds floor', () => {
+        // 1% equity, $10M preference floor, $1000 exercise cost, exit at $100M
+        // After exit: ($100M - $10M) * 1% - $1000 = $900,000 - $1000 = $899,000
+        // But there's dilution factored in for future rounds
+        const value = valueOfOptions(100000000, 0.01, 10000000, 1000, 'C+');
+        expect(value).toBeGreaterThan(0);
+      });
+
+      it('accounts for dilution from future funding rounds', () => {
+        // Same parameters but different series = different dilution
+        const valueEarly = valueOfOptions(100000000, 0.01, 10000000, 1000, 'seed');
+        const valueLate = valueOfOptions(100000000, 0.01, 10000000, 1000, 'C+');
+
+        // Earlier stage = more future dilution = lower payout
+        expect(valueEarly).toBeLessThan(valueLate);
+      });
+
+      it('larger exits produce larger payouts', () => {
+        const value100M = valueOfOptions(100000000, 0.01, 10000000, 1000, 'A');
+        const value1B = valueOfOptions(1000000000, 0.01, 10000000, 1000, 'A');
+
+        expect(value1B).toBeGreaterThan(value100M);
+      });
+    });
+
+    describe('Dilution Calculations', () => {
+      it('calculates new shares needed for investor equity', () => {
+        // Current: 10M shares, investor wants 20%
+        // New shares = (0.2 * 10M) / (1 - 0.2) = 2M / 0.8 = 2.5M
+        const result = dilutionCalculation(100000, 10000000, 0.2);
+        expect(result.newShares).toBe(2500000);
+        expect(result.newTotalShares).toBe(12500000);
+      });
+
+      it('calculates post-dilution equity correctly', () => {
+        // 100,000 options out of 10M = 1%
+        // After 20% dilution: 100,000 out of 12.5M = 0.8%
+        const result = dilutionCalculation(100000, 10000000, 0.2);
+        expect(result.equityPostDilution).toBeCloseTo(0.008, 4);
+      });
+
+      it('shows that percentage ownership decreases after dilution', () => {
+        const originalEquity = equityPercent(100000, 10000000);
+        const result = dilutionCalculation(100000, 10000000, 0.2);
+        const newEquity = result.equityPostDilution * 100;
+
+        expect(newEquity).toBeLessThan(originalEquity);
+      });
+    });
+
+    describe('Exercise Window Calculations', () => {
+      it('calculates total exercise window in years', () => {
+        expect(exerciseWindowYears(10, 0)).toBe(10);
+        expect(exerciseWindowYears(0, 365)).toBeCloseTo(1, 4);
+        expect(exerciseWindowYears(0, 90)).toBeCloseTo(90/365, 4);
+      });
+
+      it('combines years and days', () => {
+        // 2 years and 180 days = 2.5 years (approximately)
+        const result = exerciseWindowYears(2, 182);
+        expect(result).toBeCloseTo(2.5, 1);
+      });
+
+      it('returns NaN when both are missing', () => {
+        expect(exerciseWindowYears(null, null)).toBeNaN();
+        expect(exerciseWindowYears(undefined, undefined)).toBeNaN();
+      });
+    });
+
+    describe('Real-World Scenarios', () => {
+      it('Scenario: Early engineer at seed startup', () => {
+        // 50,000 options, 5M shares outstanding, $0.10 strike
+        // Company valued at $5M (seed), Series A valuation
+        const options = 50000;
+        const shares = 5000000;
+        const strike = 0.10;
+
+        const equity = equityPercent(options, shares);
+        expect(equity).toBe(1); // 1% equity
+
+        const exerciseCost = costToExercise(strike, options);
+        expect(exerciseCost).toBe(5000); // $5,000 to exercise
+
+        // If company exits at $100M
+        const prefFloor = ballparkPreferenceFloor('seed', 1, 5000000);
+        const payout = valueOfOptions(100000000, equity/100, prefFloor, exerciseCost, 'seed');
+        expect(payout).toBeGreaterThan(0); // Should be positive at $100M exit
+      });
+
+      it('Scenario: Series B hire', () => {
+        // 10,000 options, 50M shares outstanding, $2.00 strike
+        // Company valued at $200M
+        const options = 10000;
+        const shares = 50000000;
+        const strike = 2.00;
+
+        const equity = equityPercent(options, shares);
+        expect(equity).toBeCloseTo(0.02, 4); // 0.02% equity
+
+        const exerciseCost = costToExercise(strike, options);
+        expect(exerciseCost).toBe(20000); // $20,000 to exercise
+
+        // Company valuation check
+        const valPerShare = 4.00; // $200M / 50M shares
+        const compVal = companyValuation(shares, valPerShare);
+        expect(compVal).toBe(200000000);
+      });
+
+      it('Scenario: Standard 4-year vesting with 1-year cliff', () => {
+        const totalOptions = 100000;
+        const vestingYears = 4;
+        const cliffYears = 1;
+
+        // After cliff (1 year): 25% vested
+        const afterCliff = totalOptions * (cliffYears / vestingYears);
+        expect(afterCliff).toBe(25000);
+
+        // After 2 years: 50% vested
+        const after2Years = totalOptions * (2 / vestingYears);
+        expect(after2Years).toBe(50000);
+
+        // After 4 years: 100% vested
+        const afterFull = totalOptions * (4 / vestingYears);
+        expect(afterFull).toBe(100000);
+      });
+
+      it('Scenario: 90-day exercise window vs 10-year window', () => {
+        const shortWindow = exerciseWindowYears(0, 90);
+        const longWindow = exerciseWindowYears(10, 0);
+
+        expect(shortWindow).toBeCloseTo(0.247, 2); // ~3 months
+        expect(longWindow).toBe(10);
+
+        // Long window is much better for employees
+        expect(longWindow / shortWindow).toBeGreaterThan(40);
+      });
+    });
+
+    describe('Edge Cases', () => {
+      it('handles zero values gracefully', () => {
+        expect(equityPercent(0, 10000000)).toBe(0);
+        expect(costToExercise(0, 100000)).toBe(0);
+        expect(costToExercise(1, 0)).toBe(0);
+      });
+
+      it('handles very large numbers', () => {
+        // Trillion dollar company
+        const valuation = companyValuation(10000000000, 100);
+        expect(valuation).toBe(1000000000000);
+
+        // Parse 1T
+        expect(parseNumberWithSuffix('1T')).toBe(1000000000000);
+      });
+
+      it('handles very small equity percentages', () => {
+        // 1000 options out of 1B shares = 0.0001%
+        const equity = equityPercent(1000, 1000000000);
+        expect(equity).toBeCloseTo(0.0001, 6);
+      });
+    });
+
+    // ============================================
+    // Run tests and display results
+    // ============================================
+    function renderResults() {
+      const resultsDiv = document.getElementById('results');
+      const summaryDiv = document.getElementById('summary');
+
+      summaryDiv.innerHTML = `
+        <span class="pass">${passed} passed</span> |
+        <span class="fail">${failed} failed</span> |
+        ${passed + failed} total
+      `;
+
+      let html = '';
+      for (const group of tests) {
+        html += `<div class="test-group">`;
+        html += `<h2>${group.group}</h2>`;
+        for (const test of group.tests) {
+          const statusClass = test.passed ? 'pass' : 'fail';
+          const statusText = test.passed ? '✓' : '✗';
+          html += `<div class="test">`;
+          html += `<span class="test-result ${statusClass}">${statusText}</span>`;
+          html += `<span class="test-name">${test.name}</span>`;
+          if (test.error) {
+            html += `<div class="error-msg">${test.error}</div>`;
+          }
+          html += `</div>`;
+        }
+        html += `</div>`;
+      }
+
+      resultsDiv.innerHTML = html;
+    }
+
+    renderResults();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :vacation}
+    %h5{class: @presenter.term_title}
+      VACATION
+    .js-termValue
+      = f.text_field(:vacation, {class: "#{@presenter.term_title_input_class} tiny js-vacationDays",
+                     data: { "model-attribute": :vacation}})
+      %span.u-colorGray1.u-fontWeight200
+        days
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      Official vacation days plus all standard holidays. We want you rested and at your best.

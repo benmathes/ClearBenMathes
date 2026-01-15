@@ -1,0 +1,23 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :number_of_options}
+    %h5{class: @presenter.term_title}
+      NUMBER OF OPTIONS
+    .js-termValue
+      = f.text_field(:number_of_options,
+                     {class: "#{@presenter.term_title_input_class} narrow js-numberOfOptions js-numberOfOptionsObserver",
+                      data: { "model-attribute": :number_of_options}})
+      %span.u-colorGray1.u-fontWeight200
+        options
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      You will have the option to buy
+      %span.js-numberOfOptionsText.u-fontWeightBold.u-colorGray1
+        this many
+      shares of stock. You cannot buy them yet. You earn the right to buy them over time (see
+      = "#{link_to "vesting", "#vesting"})".html_safe
+      You do not own any stock unless you buy them.
+      Later funding rounds can change this. See
+      = link_to "how you get ownership", "#vesting"
+      and
+      = link_to "what happens when you leave", "#strike_price"

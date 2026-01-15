@@ -1,0 +1,68 @@
+:ruby
+  set_layout_size @presenter.layout_size
+  set_layout_scheme @presenter.layout_scheme
+  content_for :title, @presenter.title(:amendment)
+
+
+- content_for :single_column_prefix do
+  %div{ class: @presenter.page_title_wrapper }
+    %h1{ class: @presenter.page_title }
+      CLEAR Amendment
+    %div{ class: @presenter.page_title_subtext }
+      Minor tweaks to your equity that prevents painful surprises.
+      = link_to "Read why here.", '/clear', target: '_blank'
+      More info in
+      = link_to 'the FAQ', '/help/clear', target: '_blank'
+
+
+- assets do
+  = form_for :clear, url: "/docs/clear", html: {class: "s-form js-clearForm"} do |f|
+
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        Two Ways to Fairly Protect Your Equity
+      %div{class: @presenter.section_title_subtext}
+        Prevents against common surprises and pitfalls without giving away too much.
+      = render partial: 'clear/terms/which_clear', locals: {f: f}
+
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        Legal Details
+      %div{class: @presenter.section_title_subtext}
+        The mechanics of the protections, and how they work.
+      = render partial: 'clear/terms/early_exercise', locals: {f: f}
+      = render partial: 'clear/terms/exercise_window', locals: {f: f}
+      = render partial: 'clear/terms/net_exercise', locals: {f: f}
+      = render partial: 'clear/terms/loading', locals: {f: f}
+
+    %div{class: @presenter.section_style}
+      %a{name: :share_and_download}
+      %div{class: @presenter.section_title}
+        Share and Download
+      %div{class: @presenter.section_title_subtext}
+        :markdown
+          **Required** to share or download amendments.
+      = render partial: 'clear/terms/company_representation', locals: {f: f}
+      = render partial: 'clear/terms/tos', locals: {f: f}
+
+    .s-vgPadTop4.s-vgPadBottom4.s-grid.js-actionBar.u-bgGray
+      .s-grid-colLg12.u-textAlignCenter.js-actionButton
+        .js-sharing
+          = f.text_field(:sharing_url, class: 'js-shareURL wide', title: 'shareable URL')
+          %button.c-button.c-button--gray.js-copyShareURLButton
+            copy sharing URL
+            %span.fontello-export
+        .s-grid-break.u-colorMuted.s-vgTop1
+          Private. Everythign on this page is encoded in the URL.
+          %br
+          We don't track who you are or what you enter.
+
+      .s-grid-colLg12.u-textAlignCenter.js-actionButton
+        .c-button.c-button--blue.c-button--md.js-downloadButton{data: {doc_title: "amendment"}}
+          Download this Amendment
+        .s-grid-break.u-colorMuted.s-vgTop1
+          Private. AngelList doesn't save any of this.
+          %br
+          Vetted and works with most equity plans.
+
+    = render partial: 'clear/shadow_amendment_pdf'

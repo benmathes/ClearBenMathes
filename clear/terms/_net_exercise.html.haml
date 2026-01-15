@@ -1,0 +1,23 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :net_exercise}
+    %h5{class: @presenter.term_title}
+      NET EXERCISE
+    .js-termValue
+      = f.select(:net_exercise,
+                 options_for_select(["no", "yes"]), {},
+                 {class: "#{@presenter.term_title_input_class} js-netExercise s-form--widthAuto",
+                 data: {"model-attribute": :net_exercise}})
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      %span.js-netExerciseExplanation.js-no.u-hidden
+        It costs
+        %span.js-costToExerciseText
+        to exercise your options. If you can't afford that during your exercise window,
+        you lose all the ownership you will have vested.
+      %span.js-netExerciseExplanation.js-yes.u-hidden
+        If common stock is worth more when you leave than when you joined you can sell some of your
+        options back to us. You can take the proceeds and and buy the rest. A net-exercise is
+        often worse than exercising if you can afford it.
+        But a net-exercise is usually better than losing all your equity.
+      If you cannot afford to exercise, you can lose all the stock you earn with a short exercise window and no net-exercise.

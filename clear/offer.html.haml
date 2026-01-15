@@ -1,0 +1,114 @@
+:ruby
+  set_layout_size @presenter.layout_size
+  set_layout_scheme @presenter.layout_scheme
+  content_for :title, @presenter.title(:offer)
+
+
+- content_for :single_column_prefix do
+  %div{ class: @presenter.page_title_wrapper }
+    %h1{ class: @presenter.page_title }
+      CLEAR Offer Letter
+    %div{ class: @presenter.page_title_subtext }
+      Confidential &middot; AngelList does not save any offer data.
+      %br
+      .u-fontSize13.s-vgTop1_5= link_to 'Learn More', '/clear', target: '_blank'
+
+- assets do
+  = render partial: 'clear/comp_data'
+  = form_for :clear, url: "/docs/clear", html: {class: "s-form js-clearForm"} do |f|
+
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        Fundamentals
+      %div{class: @presenter.section_title_subtext}
+        Salary and equity.
+        .u-floatRight
+          Compare to
+          = f.select(:role, [], {},
+                     {class: "js-salaryRole s-form--widthAuto",
+                      placeholder: 'this role...',
+                      data: {"model-attribute": "role"}})
+          in
+          = f.select(:location, [], {},
+                     {class: "js-salaryLocation s-form--widthAuto",
+                      placeholder: 'this location...',
+                      data: {"model-attribute": "location"}})
+
+      = render partial: 'clear/terms/salary', locals: {f: f}
+      = render partial: 'clear/terms/equity', locals: {f: f}
+      = render partial: 'clear/terms/which_clear', locals: {f: f}
+
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        Your Ownership
+      %div{class: @presenter.section_title_subtext}
+        How much of the company you might someday own.
+      = render partial: 'clear/terms/number_of_options', locals: {f: f}
+      = render partial: 'clear/terms/outstanding_shares', locals: {f: f}
+      = render partial: 'clear/terms/latest_valuation', locals: {f: f}
+      = render partial: 'clear/terms/latest_company_valuation', locals: {f: f}
+
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        How You Get Your Ownership
+      %div{class: @presenter.section_title_subtext}
+        How long and how fast it takes for you to get your ownership.
+      = render partial: 'clear/terms/vesting', locals: {f: f}
+      = render partial: 'clear/terms/early_exercise', locals: {f: f}
+      = render partial: 'clear/terms/loading', locals: {f: f}
+
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        Taking Ownership
+      %div{class: @presenter.section_title_subtext}
+        The mechanics of turning your options into ownership.
+      = render partial: 'clear/terms/strike_price', locals: {f: f}
+      = render partial: 'clear/terms/exercise_window', locals: {f: f}
+      = render partial: 'clear/terms/cost_to_exercise', locals: {f: f}
+      = render partial: 'clear/terms/net_exercise', locals: {f: f}
+      = render partial: 'clear/terms/preference_floor', locals: {f: f}
+
+    %div{class: @presenter.section_style}
+      %a{name: :how_much_is_it_worth}
+      %div{class: @presenter.section_title}
+        In Rare Exits, How Much Could Your Equity Be Worth?
+      %div{class: @presenter.section_title_subtext}
+        The biggest factor is how much bigger the company gets.
+        It's your job to guess how big the company can be and how likely that is.
+        The bigger the exit, the smaller the chance.
+        Huge outcomes only happen a few times each decade.
+      = render partial: '/clear/how_much', locals: {f: f}
+
+    %div{class: @presenter.section_style}
+      %a{name: :share_and_download}
+      %div{class: @presenter.section_title}
+        Share and Download
+      %div{class: @presenter.section_title_subtext}
+        :markdown
+          **Required** to share or download offers.
+      = render partial: 'clear/terms/company_representation', locals: {f: f}
+      = render partial: 'clear/terms/tos', locals: {f: f}
+
+    .s-vgPadTop4.s-vgPadBottom4.s-grid.js-actionBar.u-bgGray
+      .s-grid-colLg12.u-textAlignCenter.js-actionButton
+        .js-sharing
+          = f.text_field(:sharing_url, class: 'js-shareURL wide', title: 'shareable URL')
+          %button.c-button.c-button--gray.js-copyShareURLButton
+            copy sharing URL
+            %span.fontello-export
+        .s-grid-break.u-colorMuted.s-vgTop1
+          Private. Everything on this page is encoded in the URL.
+          %br
+          We don't track who you are or what you enter.
+
+
+      .s-grid-colMd12.u-textAlignCenter.js-actionButton
+        .c-button.c-button--blue.c-button--md.js-downloadButton{data: {doc_title: "offer"}}
+          Download this Offer
+        .s-grid-break.u-colorMuted.s-vgTop1
+          Private. AngelList doesn't save any of this.
+          %br
+          Vetted and works with most equity plans.
+
+
+    = render partial: 'clear/shadow_offer_pdf'

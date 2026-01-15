@@ -1,0 +1,36 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :preference_floor}
+    %h5{class: @presenter.term_title}
+      PREFERENCE FLOOR
+    .js-termValue
+      %span.unit-left.u-colorGray1.u-fontWeight200
+        $
+      = f.text_field(:preference_floor,
+                     {class: "#{@presenter.term_title_input_class} left-unit-input wide js-preferenceFloor",
+                      data: {"model-attribute": :preference_floor}})
+      %span.u-colorGray1.u-fontWeight200
+        (approximate, current)
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      %span.js-preferenceFloorExplanation.js-noNumbers.u-hidden
+        We need to exit for more than this floor for common stock to be worth anything.
+      %span.js-preferenceFloorExplanation.js-aboveLatestValuation.u-hidden
+        We must be worth more than
+        %span.js-preferenceFloorText.u-fontWeightBold.u-colorGray4
+        for common stock to be worth anything. Your options cost money to exercise. We need to be worth
+        even more than the floor for your options to be worth anything.
+
+      %span.js-preferenceFloorExplanation.js-aboveExerciseCost.u-hidden
+        %br
+        %br
+        Exercising your options costs money
+        (#{link_to "strike price", "#strike_price"} x #{link_to "# options", "#number_of_options"})
+        so we must be worth&nbsp;
+        %span.js-preferenceFloorIncreaseOptionsInMoney.u-fontWeightBold.u-colorGray4>
+        \.
+      Your options let you buy common stock. Investors usually buy preferred stock.
+      Preferred is usually paid back in full (or more) before common gets anything.
+      Any further funding will likely raise this floor.
+    .u-hidden.js-optionsInMoneyChartObserver
+    .js-optionsInMoneyChart.s-vgTop1_5

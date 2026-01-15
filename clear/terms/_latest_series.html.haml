@@ -1,0 +1,13 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :salary}
+    %h5{class: @presenter.term_title}
+      Latest Series
+    .js-termValue
+      %span.unit-left.u-colorGray1.u-fontWeight200
+      = f.select(:latest_series, [], {},
+                 {class: "#{@presenter.term_title_input_class} js-latestSeries s-form--widthAuto",
+                  data: { 'model-attribute': :latest_series }})
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      The most recent funding round. Was it seed, A, B, etc.?

@@ -1,0 +1,14 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :latest_valuation}
+    %h5{class: @presenter.term_title}
+      LATEST COMPANY VALUATION
+    .js-termValue
+      %span.js-companyValuationText
+      %span.u-colorGray1.u-fontWeight200
+        (approximate, current)
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      This is the latest preferred value per share times the number of shares.
+      This is what you usually read in the press. This is the value of the company
+      to you only if you own preferred stock. You get common stock.

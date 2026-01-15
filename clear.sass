@@ -1,0 +1,55 @@
+@import partials/imports
+
++directory(clear)
+  .shadowPDF
+    font-family: "Times New Roman", Georgia, Serif
+
+  .s-form
+    .clearPreset
+      cursor: pointer
+
+    .clearTerm .gutter-icon
+      float: left
+      margin-left: -20px
+      font-size: 15px
+
+    .unit-left
+      position: relative
+      left: 8px
+      &.compact
+        top: 2px
+    .unit-right
+      position: relative
+      right: 8px
+      &.compact
+        top: 2px
+
+    .left-unit-input
+      margin-left: -12px
+      padding-left: 20px
+    .right-unit-input
+      padding-right: 20px
+      margin-right: -12px
+
+    .narrow, .tiny, .wide, .standard
+      text-align: right
+
+    .wide
+      width: 120px
+    .standard
+      width: 100px
+    .narrow
+      width: 80px
+    .tiny
+      width: 40px
+
+    .termDescription
+      .harmful
+        color: #C0423F
+      .helpful
+        color: #007047
+
+
+    .js-actionButton.disabled
+      opacity: 0.6
+      pointer-events: none

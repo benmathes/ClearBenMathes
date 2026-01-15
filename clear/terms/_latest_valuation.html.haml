@@ -1,0 +1,20 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :latest_valuation_per_share}
+    %h5{class: @presenter.term_title}
+      LATEST VALUATION
+    .js-termValue
+      %span.unit-left.u-colorGray1.u-fontWeight200
+        $
+      = f.text_field(:latest_valuation_per_share,
+                     { class: "#{@presenter.term_title_input_class} left-unit-input narrow js-latestValuationPerShare",
+                       data: {"model-attribute": :latest_valuation_per_share}})
+      %span.u-colorGray1.u-fontWeight200
+        per preferred share
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      Investors usually buy preferred stock. The latest investors thought their shares were each worth&nbsp;
+      %span.js-latestValuationPerShareText.u-fontWeightBold.u-colorGray4>
+        this much
+      \. Preferred stock gets preferential terms
+      that usually makes it worth more than common stock. You get common stock.

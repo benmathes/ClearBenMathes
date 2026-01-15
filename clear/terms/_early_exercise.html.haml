@@ -1,0 +1,29 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :early_exercise}
+    %h5{class: @presenter.term_title}
+      EARLY EXERCISE
+    .js-termValue
+      = f.select(:early_exercise, ["no", "yes"], {},
+                 {class: "#{@presenter.term_title_input_class} js-earlyExercise s-form--widthAuto",
+                  data: {"model-attribute": :early_exercise}})
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      %span.js-earlyExerciseExplanation.js-yes.u-hidden
+        If you want, you can buy your options when you join. It costs
+        %span.js-costToExerciseText.u-fontWeightBold.u-colorGray4
+        to early exercise.
+        You still vest over time, but with a different mechanism. We
+        can buy back your shares. We lose that right over time at
+        the same rate you would have vested.
+        %br
+        %br
+        Why do it? Taxes. You would start the clock on long-term capital
+        gains now, not when you leave. There is still risk that your equity may be
+        worth nothing.
+      %span.js-earlyExerciseExplanation.js-no.u-hidden
+        You cannot early exercise. You can only exercise as you vest. You may miss
+        out on tax savings.
+      While you have to pay
+      %span.js-costToExerciseText.u-fontWeightBold.u-colorGray4
+      and take on some risk, an early-exercise can save a lot of tax.

@@ -1,0 +1,17 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :cost_to_exercise}
+    %h5{class: @presenter.term_title}
+      COST TO EXERCISE
+    .js-termValue
+      %span.u-colorGray1.u-fontWeight200.js-costToExerciseText
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      This is your number of options times your strike price.
+      %div.js-costToExerciseEquation.u-hidden
+        %span.js-strikePriceText
+        \*
+        %span.js-numberOfOptionsText
+        \=
+        %span.js-costToExerciseText
+      You have to pay this to convert all your options into common stock.

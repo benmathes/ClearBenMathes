@@ -1,0 +1,13 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :company_representation}
+    %h5{class: @presenter.term_title}
+      TERMS OF SERVICE
+    .js-termValue
+      = f.check_box :accepted_tos,
+                    {class: "#{@presenter.term_title_input_class} js-acceptToS",
+                     data: { "model-attribute": :accepted_tos }}
+      = f.label :accepted_tos, "I accept the terms."
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      I accept #{link_to "AngelList's terms of service", '/terms', target: :_blank}.

@@ -1,0 +1,18 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :latest_valuation}
+    %h5{class: @presenter.term_title}
+      Latest Company Valuation
+    .js-termValue
+      %span.unit-left.u-colorGray1.u-fontWeight200
+        $
+      = f.text_field(:latest_valuation_per_share,
+                     { class: "#{@presenter.term_title_input_class} left-unit-input narrow js-latestValuation",
+                       data: {"model-attribute": :latest_valuation}})
+      %span.u-colorGray1.u-fontWeight200
+        (approximate, current)
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      This is the value of the company to you only if you own the
+      same kind of stock as investors. Investors usually
+      get preferred stock. You will get common stock.

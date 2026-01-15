@@ -1,0 +1,17 @@
+
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :liquidation_preference}
+    %h5{class: @presenter.term_title}
+      Liquidation Preference
+    .js-termValue
+      %span.u-colorGray1.u-fontWeight200.unit-left
+      = f.text_field(:strike_price,
+                     {class: "#{@presenter.term_title_input_class} right-unit-input js-liquidationPreference narrow",
+                      data: {"model-attribute": :liquidation_preference}})
+      %span.unit-right
+        x &nbsp;&nbsp;non-participating
+  %div{class: @presenter.term_right}
+    %div{class: @presenter.description_style}
+      With a liquidiation preference, investors get their money back before others.
+      A liquidiation preference prevents the founders from absconding with investor money.

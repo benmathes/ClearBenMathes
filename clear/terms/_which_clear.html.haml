@@ -1,0 +1,28 @@
+%div{class: @presenter.term_style}
+  %div{class: @presenter.term_left}
+    %a{name: :which_clear}
+    %div{class: @presenter.term_title}
+      CLEAR EQUITY MECHANICS
+    .js-termValue
+      = f.radio_button(:preset, :clear1,
+                     {class: "#{@presenter.term_title_input_class} js-preset s-form--widthAuto",
+                     data: { "model-attribute": :preset }})
+      = f.label :preset_clear1, "10-year window"
+      %br
+      = f.radio_button(:preset, :clear2,
+                     {class: "#{@presenter.term_title_input_class} js-preset s-form--widthAuto",
+                     data: { "model-attribute": :preset }})
+      = f.label :preset_clear2, "90-day window, net-exercise"
+      .u-colorGray8.u-fontWeight200
+        And early-exercise with no back/front-loading.
+      .js-presetObserver.u-hidden
+
+  %div{class: @presenter.term_right }
+    %div{class: @presenter.description_style }
+      .js-presetText.js-clear1.u-hidden
+        Longest-allowable window to exerise your options. Employees can wait until
+        a company exits to exercise.
+      .js-presetText.js-clear2.u-hidden
+        Short window to exercise. But a mechanism to get some of your shares.
+      Plus #{link_to "early exercise", "#early_exercise"}
+      and no #{link_to "front/back-loading", "#loading"}

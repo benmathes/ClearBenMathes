@@ -1,0 +1,69 @@
+:ruby
+  set_layout_size @presenter.layout_size
+  set_layout_scheme @presenter.layout_scheme
+  content_for :title, @presenter.title(:how_much)
+
+
+- content_for :single_column_prefix do
+  %div{ class: @presenter.page_title_wrapper }
+    %h1{ class: @presenter.page_title}
+      In Rare Exits, How Much Could Your Equity Be Worth?
+    %div{ class: @presenter.page_title_subtext }
+      Huge successes are rare and occur only a couple times each decade.
+      %br
+      Ballpark what your equity might be worth if you get lucky.
+
+- assets do
+  = render partial: 'clear/comp_data'
+  = form_for :clear, url: "/docs/clear", html: {class: "s-form js-clearForm"} do |f|
+
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        Your Slice of the Pie
+      %div{class: @presenter.section_title_subtext}
+        How much of the company do you own? This will go down with further investment ("dilution").
+      = render partial: 'clear/terms/equity', locals: {f: f}
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        How Big Does the Pie Have to Be for You to Get a Slice?
+      %div{class: @presenter.section_title_subtext}
+        Investor protections usually mean your common shares won't be worth anything until a certain floor
+        is hit.
+      = render partial: 'clear/terms/preference_floor', locals: {f: f}
+      .s-grid-colSm24.c-inset.u-bgGray.js-ballparkPreferenceFloorFullTerms
+        .u-colorMuted.u-fontWeight300
+          Without the preference floor, we can estimate it with:
+        = render partial: 'clear/terms/latest_valuation_editable', locals: {f: f}
+        = render partial: 'clear/terms/liquidation_preference', locals: {f: f}
+        = render partial: 'clear/terms/latest_series', locals: {f: f}
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        What You Pay to Get Your Slice
+      %div{class: @presenter.section_title_subtext}
+        Turning your options into ownership has a cost. That cost is tiny when the company does well,
+        but the cost can surprise people. You may have to pay to exercise and then wait for years for the
+        company to be sold.
+      = render partial: 'clear/terms/number_of_options', locals: {f: f}
+      = render partial: 'clear/terms/strike_price', locals: {f: f}
+    %div{class: @presenter.section_style}
+      %div{class: @presenter.section_title}
+        How Much Could Your Equity Be Worth?
+      %div{class: @presenter.section_title_subtext}
+        The biggest factor is how much bigger the company gets.
+        It's your job to guess how big we can be and how likely that is.
+        The bigger the exit, the smaller the chance.
+        Huge outcomes only happen a few times each decade.
+      = render partial: '/clear/how_much', locals: {f: f}
+
+
+    .s-vgTop5.s-grid.js-actionBar
+      .s-grid-colLg24.u-textAlignCenter
+        .js-sharing
+          = f.text_field(:sharing_url, class: 'js-shareURL wide', title: 'shareable URL')
+          %button.c-button.c-button--gray.js-copyShareURLButton
+            copy sharing URL
+            %span.fontello-export
+        .s-grid-break.u-colorMuted.s-vgTop1
+          Private. Everythign on this page is encoded in the URL.
+          %br
+          We don't track who you are or what you enter.
